@@ -1,0 +1,10 @@
+- github 账户申请与使用初步（网页版）
+- python安装
+- jupyter notebook安装
+- anaconda安装
+- markdown基本使用
+- jupyter notebook基本使用
+- 第一个python程序
+   - 用jupyter notebook
+   - 用命令行
+   - 用spyder
