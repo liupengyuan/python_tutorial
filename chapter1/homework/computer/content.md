@@ -38,7 +38,8 @@
   - https://www.python.org/ftp/python/3.6.0/python-3.6.0-webinstall.exe
   - 安装到D盘
   - 勾选 Install for all users以及add python to Path
-  - - Win+R 回车
+  - Win+R 回车
+  - 键入powershell 回车
   - 键入python
 - jupyter notebook  安装
   - Win+R 回车  
