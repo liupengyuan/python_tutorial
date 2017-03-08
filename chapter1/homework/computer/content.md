@@ -36,7 +36,7 @@
   - download 3.6 version
   - https://www.python.org/ftp/python/3.6.0/python-3.6.0-amd64-webinstall.exe
   - https://www.python.org/ftp/python/3.6.0/python-3.6.0-webinstall.exe
-  - 安装到D盘
+  - 安装到D:\python下
   - 勾选 Install for all users以及add python to Path
   - Win+R 回车
   - 键入powershell 回车
