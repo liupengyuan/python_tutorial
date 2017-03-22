@@ -202,7 +202,7 @@ m = int(input('请输入要输入的整数个数，回车结束。'))
 max_number = int(input('请输入一个整数，回车结束'))
 min_number = max_number
 
-total = 0
+total = max_number
 
 i = 1
 while i < m:
