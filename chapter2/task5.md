@@ -562,7 +562,7 @@ while i < 5:
     i += 1
 ```
 
--**math**模块，提供数学函数等功能。具体函数与使用可参考官方文档：https://docs.python.org/3/library/math.html
+- **math**模块，提供数学函数等功能。具体函数与使用可参考官方文档：https://docs.python.org/3/library/math.html
 列举几个常用的函数如下：  
 `math.ceil(x)`  
 Return the ceiling of x, the smallest integer greater than or equal to x.  
@@ -662,7 +662,8 @@ def main():
 
 
 #主程序
-main()
+if __name__ == '__main__':
+    main()
 ```
 
 
