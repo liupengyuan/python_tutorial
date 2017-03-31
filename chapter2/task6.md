@@ -340,9 +340,10 @@ monte_carlo_method(number)
 - Bokeh的安装。  
 如果已经安装了Anaconda，则Bokeh库已经在内，无需另行安装。
 如果只安装了python及jupyter，则需要Bokeh需要单独安装：
-  - 进入powershell
-  - pip install bokeh
-  - 安装完毕。
+   - 进入powershell
+   - pip install bokeh 
+   - 安装完毕
+
 
 ```python
 
