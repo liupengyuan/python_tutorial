@@ -337,13 +337,12 @@ monte_carlo_method(number)
 
 好，大功告成，但是感觉意犹未尽。我们期望能自己能初步实现个直观的可视化来展现效果。
 这里介绍python可视化交互库Bokeh，最突出的特点是直接针web浏览器进行可视化展示。另一个使用较多的库是matplotlib，网上教程很多，请读者自行学习。
-- Bokeh的安装。
+- Bokeh的安装。  
 如果已经安装了Anaconda，则Bokeh库已经在内，无需另行安装。
 如果只安装了python及jupyter，则需要Bokeh需要单独安装：
-- 进入powershell
-- pip install bokeh
-
-安装完毕。
+  - 进入powershell
+  - pip install bokeh
+  - 安装完毕。
 
 ```python
 
