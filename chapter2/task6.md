@@ -335,13 +335,14 @@ monte_carlo_method(number)
 
 ```
 
-好，大功告成，但是感觉意犹未尽。我们期望能有个直观的可视化来展现效果。  
-我们这里介绍python可视化交互库Bokeh，最突出的特点是直接针web浏览器进行可视化展示。国内使用较多的是matplotlib，有兴趣的读者可参看网上有教程。
+好，大功告成，但是感觉意犹未尽。我们期望能自己能初步实现个直观的可视化来展现效果。
+这里介绍python可视化交互库Bokeh，最突出的特点是直接针web浏览器进行可视化展示。另一个使用较多的库是matplotlib，网上教程很多，请读者自行学习。
 - Bokeh的安装。
 如果已经安装了Anaconda，则Bokeh库已经在内，无需另行安装。
 如果只安装了python及jupyter，则需要Bokeh需要单独安装：
 - 进入powershell
 - pip install bokeh
+
 安装完毕。
 
 ```python
@@ -505,18 +506,19 @@ print(r'C:\some\name')  # note the r before the quote
 ```
 
 比较常用的python转义字符如下：
+```python
+ \\	Backslash (\)  
+ \'	Single quote (')  
+ \"	Double quote (")  
+ \a	ASCII Bell (BEL)  
+ \b	ASCII Backspace (BS)  
+ \f	ASCII Formfeed (FF)	
+ \n	ASCII Linefeed (LF)  
+ \r	ASCII Carriage Return (CR)  
+ \t	ASCII Horizontal Tab (TAB)  
+```
 
-\\	Backslash (\)  
-\'	Single quote (')  
-\"	Double quote (")  
-\a	ASCII Bell (BEL)  
-\b	ASCII Backspace (BS)  
-\f	ASCII Formfeed (FF)	
-\n	ASCII Linefeed (LF)  
-\r	ASCII Carriage Return (CR)  
-\t	ASCII Horizontal Tab (TAB)  
-
-- 列表推导
+- 列表推导  
 对可迭代（遍历）对象如list，比较频繁的操作是：遍历list，取符合条件的元素子集并对其中每个元素进行某些操作，python提供了类似操作的简洁实现方式。
 
 ```python
