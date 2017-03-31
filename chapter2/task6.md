@@ -506,17 +506,19 @@ print(r'C:\some\name')  # note the r before the quote
 ```
 
 比较常用的python转义字符如下：
-```python
- \\	Backslash (\)  
- \'	Single quote (')  
- \"	Double quote (")  
- \a	ASCII Bell (BEL)  
- \b	ASCII Backspace (BS)  
- \f	ASCII Formfeed (FF)	
- \n	ASCII Linefeed (LF)  
- \r	ASCII Carriage Return (CR)  
- \t	ASCII Horizontal Tab (TAB)  
-```
+
+转义字符|转义后含义|
+---|----|
+ `\\` |	Backslash (\)  
+ `\'`|Single quote (')  
+ `\"`|	Double quote (")  
+ `\a`|	ASCII Bell (BEL)  
+ `\b`|	ASCII Backspace (BS)  
+ `\f`|	ASCII Formfeed (FF)	
+ `\n`|	ASCII Linefeed (LF)  
+ `\r`|	ASCII Carriage Return (CR)  
+ `\t`|	ASCII Horizontal Tab (TAB)  
+
 
 - 列表推导  
 对可迭代（遍历）对象如list，比较频繁的操作是：遍历list，取符合条件的元素子集并对其中每个元素进行某些操作，python提供了类似操作的简洁实现方式。
