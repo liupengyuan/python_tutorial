@@ -342,7 +342,7 @@ monte_carlo_method(number)
 如果只安装了python及jupyter，则需要Bokeh需要单独安装：
    - 进入powershell
    - pip install bokeh 
-   - 安装完毕
+   -  安装完毕
 
 
 ```python
@@ -381,7 +381,7 @@ for i in range(500):
 show(p)
 ```
 
-我们还可以将画布直接嵌入到jupyter note之中，只需要略作修改。
+我们还可以将画布直接嵌入到jupyter notebook之中，只需要略作修改。
 
 ```python
 from bokeh.plotting import figure, output_file, show
