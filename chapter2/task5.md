@@ -495,7 +495,7 @@ else:                   #当条件表达式值为False
 def main():
     while True:
         menu()
-        choice = int(input('请输入你的选择')
+        choice = int(input('请输入你的选择'))
         if choice == 1:
             show_instruction()
         elif choice == 2:
@@ -649,7 +649,7 @@ def guess_game():
 def main():
     while True:
         menu()
-        choice = int(input('请输入你的选择')
+        choice = int(input('请输入你的选择'))
         if choice == 1:
             show_instruction()
         elif choice == 2:
