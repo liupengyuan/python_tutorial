@@ -1,0 +1,497 @@
+核心任务：点字成语/点字成诗游戏
+ 
+8.1 任务简介与分析
+
+- 任务简介  
+
+点字成诗游戏基本与中国诗词大会中的相同，这里仅考虑5言及7言诗词句，前者给出3X3共9个字，包含5言中的所有字，但不与其重复，随机打乱；后者与前者类似，但是给出3X4共12个字，随机打乱。
+点字成语与点字成诗类似，成语只考虑4个字，将给出3X2共6个字随机打乱。
+此外，还要考虑玩家积分，后续考虑设计等级提升等。
+
+- 任务分析
+
+成语库可以从网上下载搜集，然后放到文件中。可以将所有成语放到序列或者元组中，新增不在成语中的字则需要构建一个字表，，随机抽取及随机打乱则需要利用random模块。  
+点字成诗与成语库类似。
+
+8.2 文件读取与写入
+
+请读者到`https://github.com/liupengyuan/liupengyuan.github.io/tree/master/chapter2/data`下载`成语.txt`，并将文件保存到目录:`d:\temp\`下。  
+首先，用记事本或者其他文本编辑器打开该文件，查看文件内容。
+
+```python
+行尸走肉、
+金蝉脱壳、
+百里挑一、
+金玉满堂、
+背水一战、
+霸王别姬、
+天上人间、
+不吐不快、
+海阔天空、
+情非得已、
+满腹经纶、
+...
+```
+
+我们要从文件中读取这些内容。
+- 键入如下代码并观察执行结果。
+
+```python
+# 示例代码8-1
+
+fh = open(r'd:\temp\成语.txt')
+
+text = fh.read()
+
+fh.close()
+
+print(len(text))
+print(text)
+```
+
+示例代码8-1中：  
+- `open()`是打开文件的内置函数，其以只读方式打开文件基本用法是：`open(filename)`，其中参数`filename`是一个字符串，内含一个文件全名(路径名/文件名.扩展名)，功能就是打开与`filename`对应的文件，返回一个文件对象。  
+本例中，文本文件`成语.txt`打开以后，文件对象被赋值给`fh`。  
+- `read()`是读取文件内容的方法，其基本用法是：`文件对象.read()`，该方法可以将文件中所有内容作为一个字符串读入。  
+本例中，`成语.txt`内的所有内容作为一个字符串读入后，被赋值给`text`。  
+- `close()`是关闭文件的方法，其基本用法是：`文件对象.close()`。注意，文件对象在程序退出前，必须关闭，否则有时会出现难以预知的错误。  
+
+下一步将在`text`中提取每一个成语，并将所有成语放入到一个列表中。一个思路是考虑是否可以利用字符串切片，按照四字成语的规律，循环将成语切出后放入列表。但仔细观察文件内容，发现首先有一些3字词，有一些多于四字，并且并非所有条目的末端都有符号`、`所以很难找到规律快速切出成语。
+我们换一种思路，以每行的换行符`\n`定位成语末尾。
+
+```python
+# 示例代码8-2
+
+text = text.replace('、', '')
+
+start = 0
+end = 0
+
+idioms = []
+while end < len(text):
+    if text[end] == '\n':
+        idioms.append(text[start:end])
+        start = end + 1
+    end += 1
+print(idioms)
+```
+
+示例代码8-2中： 
+- `replace()`是替换字符的方法，其基本用法是：`字符串.replace(old_str, new_str)`，`old_str·与·new_str`两个参数分别是字符串中将被替换的字符子串及新字符串，该方法将字符串中所有的`old_str`替换成`new_str`。  
+本例中将`text`中所有的`、`替换成''，即删去所有的`、`，这样，每个条目的末端就只剩下换行符：`\n`。  
+然后利用`while`循环，找到每次`\n`出现的位置，也就是每次切片的末端位置。  
+代码虽然并不复杂，考虑到通过某个分隔符将文本分开并放入到列表中这样的任务非常常见，当然可以将这段代码做成函数，以便复用。但是python提供了更好的解决办法。
+
+```python
+# 示例代码8-3
+
+text = text.replace('、', '')
+idioms = text.split('\n')
+print(idioms)
+```
+
+示例代码8-3中：
+- `split()`是将字符按照分隔符分开的方法，其基本用法是：`字符串.split(sep)`，该方法将字符串按照分隔符`sep`分隔成多个子串，返回一个列表，列表每个对象为一个子串。  
+得到成语列表以后，我们应该将这个文件保存，因为以后多次运行游戏的时候，我们就可以直接用这个列表，而不用每次都进行上述处理。
+
+```python
+# 示例代码8-4
+
+fh = open(r'd:\temp\idioms_correct.txt', 'w')
+fh.writelines(idioms)
+fh.close()
+```
+
+示例代码8-4中：
+- 在`open()`函数中，多了一个参数`'w'`，该参数是英文write的缩写，参数指明文件以写入的方式打开。
+- `open()`函数的基本用法是：`open(filename, mode)`，其中`mode`是一个字符串，默认为`r`，即只读(只能读取)方式，`'w'`是只写方式，且在写入前如果已有文件，则清空文件，否则新建文件。
+- `writelines(...)`是像文件写入序列的方法，其基本用法是：`文件对象.writelines(...)`，该方法将序列中所有文件依次写入文件对象。
+
+然后我们打开`d:\temp\`目录，发现确实新建立了文件`idioms_correct.txt`，打开这个文件，会发现所有成语连到一起，这是因为`writelines(...)`方法是将序列所有对象连续写入文件。
+
+```python
+# 示例代码8-5
+
+fh = open(r'd:\temp\idioms_correct.txt', 'w')
+for idiom in idioms:
+    correct_idioms.append(idiom+'\n')
+fh.writelines(correct_idioms)
+fh.close()
+```
+
+示例代码8-5将每个idiom加入换行符，再利用`writelines(...)`写入就没有问题了。也可以利用**列表推导**，使代码更简洁。
+
+```python
+# 示例代码8-6
+
+fh = open(r'd:\temp\idioms_correct.txt', 'w')
+idioms = [idiom + '\n' for idiom in idioms]
+fh.writelines(idioms)
+fh.close()
+```
+
+示例代码8-6中：
+- `[idiom + '\n' for idiom in idioms]`是列表推导，功能与示例代码8-5中`for`循环结构功能类似，都是将`idioms`中每一个`idiom`取出后加上`\n`，最后形成一个列表。这里让`idioms`指向用列表推导得到的新列表，没有必要再如示例代码8-5那样定义新的变量`correct_idioms`。 
+也可以采用如下方式保存：
+
+```python
+# 示例代码8-7
+
+fh = open(r'd:\temp\idioms_correct.txt', 'w')
+for idiom in idioms:
+    fh.write(idiom + '\n')
+fh.close()
+```
+
+示例代码8-7中：
+- `write()`是向文件写入字符串的方法，其基本用法是：`文件对象.write(str)`，该方法将一个`str`写入文件对象。因此需要加入换行符，将每个成语独立成一行。
+
+更为常用的方法是：
+
+```python
+# 示例代码8-8
+
+fh = open(r'd:\temp\idioms_correct.txt', 'w')
+fh.write('\n'.join(idioms))
+fh.close()
+```
+示例代码8-8中：
+- `str.join(...)`将序列内所有元素之间均用`str`进行连接的方法，其基本用法是：`分隔字符串.join(...)`。
+
+前面只是完成了成语搜集和保存的工作，现在我们考虑游戏过程的实现。首先写出游戏main()函数的伪码：
+
+```python
+# main()函数伪码
+显示游戏菜单
+一直做如下步骤：
+    等待用户选择
+    如果选择1：
+        则显示游戏玩法说明
+        显示游戏菜单
+    如果选择2：
+        则进入成语游戏
+    如果选择3：
+        则进入诗词游戏
+    如果选择4：
+        则显示GAME OVER
+        退出游戏
+    如果选择5：
+        则显示游戏制作团队
+        显示游戏菜单
+```
+
+`main()`函数部分与第5节的猜数游戏相关内容类似，请读者自行实现。  
+然后写出成语游戏函数的伪码：
+
+```python
+# 成语游戏函数伪码
+设定初始玩家分数
+设已猜测成语表为空
+打开文件读入成语列表
+形成成语用字表
+取成语列表中第一个成语作为idiom
+当玩家分数大于0时，则一直做如下步骤：
+    当idiom在已猜测成语表中，则一直做如下步骤：
+        在成语列表中随机取一个4字成语idiom
+    否则：
+        显示胜利界面
+        显示游戏者最后得分
+        退出成语游戏函数
+    
+    在idiom中随机加入不在这个idiom中的2个字
+    将加字的idiom按照3X2形式显示在屏幕
+    玩家输入猜测成语字符串guess
+    如果guess==idiom：
+        玩家分数加10分
+        将此idiom加入到已猜测成语表
+        将此idiom从成语列表中删除
+    否则：
+        玩家分数减10分
+否则：
+    显示失败页面
+    退出成语游戏函数
+```
+
+首先是读取文件，我们需要统计得到所有成语中都出现了哪些字。
+
+8.3 字表统计  
+首先给出伪码如下：
+
+```python
+令字符表`ch_talbe`为空列表
+取字符串中每一个字:
+    如果该字不在字符表中则:
+        将其加入字符表
+返回字符表
+```
+
+根据伪码写如下代码：
+
+```python
+# 示例代码8-9
+
+def get_ch_table(line):
+    ch_table = []
+    for ch in line:
+        if ch not in ch_table:
+            ch_table.append(ch)
+    return ch_table
+
+# 主程序
+fh = open(r'd:\temp\idioms_correct.txt')
+text = fh.read()
+chs = get_ch_table(text.replace(r'\n', ''))
+
+print(len(chs), chs)
+```
+
+示例代码8-9中：
+- 我们将求一个字符串的字表做成了一个函数`get_ch_table(str)`，参数是字符串，该函数返回字表的`list`。
+- 主程序中首先读入文本文件，将文本文件中的内容赋值给`text`中，然后利用`replace()`函数，将整个字符串中的成语去掉换行符连成一个字符串，并作为函数`get_ch_table()`的参数。
+- 调用`get_ch_table()`，就得到了所有词条的字表。
+
+目前的方法已经能够解决问题，但并非最佳方案，字表统计其实有更佳的解决办法，将在后续章节中详细介绍。
+
+8.4 随机抽取序列元素
+```python
+# 示例代码8-10
+import random
+
+idioms = text.split()
+for i in range(15):
+    idiom = random.choice(idioms)
+    print(idiom)
+```
+示例代码8-10中：
+- `split()`如果不带参数，则默认以空格(或连续空格，含换行、换页及回车等)作为分隔符。这样，`text`通过`split()`方法，就得到了成语列表`idioms`。
+- `choice()`是在序列随机抽取对象的方法，其基本用法是：`random.choice(seq)`，该方法在参数`seq`指定的指定序列中随机取一个对象作为返回值。
+
+可以看到，随机抽取了15次，抽取的`idiom`没有什么特殊规律。
+下一步需要解决的问题就是，随机从字表中抽取不在成语中的2个字，与随机得到的成语idiom中的4个字，合并为6个字，并以3X2的形态输出。
+
+```python
+# 示例代码8-11
+
+import random
+
+idiom = '千钧一发'              #假设抽取到了这个'成语'
+
+fh = open(r'd:\temp\idioms_correct.txt')
+text = fh.read()
+chs = get_ch_table(text.replace(r'\n', ''))
+
+guess_ch_table = [ch for ch in idiom]
+while len(guess_ch_table) < 6:
+    ch = random.choice(chs)
+    if ch not in guess_ch_table:
+        guess_ch_table.append(ch)
+
+random.shuffle(guess_ch_table)
+
+for i in range(0,6,2):
+    print(guess_ch_table[i], guess_ch_table[i+1])
+```
+
+示例代码8-11中：
+- 首先通过列表推导得到了‘千钧一发’的4字字表。
+- 然后利用while循环，使`guess_ch_table`的大小控制在6个字内的条件下，从字表`chs`中随机抽取汉字，加入到`guess_ch_table`中。
+- `shuffle(...)`是random模块中的随机打乱序列内部对象顺序的方法，基本用法为：`random.shuffle(序列)`。
+- 最后将6个字的字表，按照3X2的形态打印出来。
+
+有示例代码8-1到8-11，读者应该能够将这个游戏实现，别忘记限制所有成语是4个字。  
+对点字成诗，与点字成语的实现类似，区别有三：原始数据文件、诗词长度、字的输出形态。请读者自行完成。
+
+8.4 相关任务
+
+- 诗词大会机器人设计任务。假设机器人能够读取保存所有诗词的文件，假设机器人已经能够把看到的字转换为文本，且已经得到含有9或12个字的列表，在这个前提下，我们来设计诗词大会答题机器人。  
+任务分析：  
+一个简单的思路就是，将9或12字的列表中所有的字，取其中任意5或7个字进行的全排列，然后看哪个排列在诗词列表中：
+
+```python
+# 示例代码8-12
+
+import itertools
+text = ('清','行','人','断','肠','西','明','时','节','雨','纷','纷')
+guesses = itertools.permutations(text, 7)
+
+fh = open(r'd:\temp\诗词大全.txt')
+poems = fh.read().split()
+fh.close()
+
+for guess in guesses:
+    if guess in poems:
+        print('答案是：' guess)
+```
+
+示例代码8-11中：
+
+- `permutations(..., int)`是得到序列全排列的函数，第一个参数是序列，第二个参数是取第一个序列中多少个元素来做全排列。该函数在`itertools`模块中，需要提前`import`。
+
+要有一定的耐心，等待我们刚刚设计的‘机器人’输出答案，以这样的速度，毫无疑问，机器人将在诗词大会上出糗！  
+我们来简单分析一下原因。`itertools.permutations(text, 7)`将产生P(12, 7) = 3991680 ，约400万个排列结果。`诗词大全.txt`中的诗词约有500句，则需要进行400万*500次=20亿次字符串是否相等的比较。假设当前个人电脑每秒可以进行1000万次这种字符串比较，则完成这个任务需要200秒，即3分20秒。
+
+我们可以换个更快的电脑，也可以换个思路，思路决定出路。 可以反过来，将每一个诗词的条目与题目相比较，如果条目中所有字均在题目之中，则该条目即为答案。  
+那么需要多少运算次数和时间呢？对7言诗词，以7言为例进行估算，每个条目有7个字，每个字需要与题目中的12个字进行比较，一共有500个词条，则总共需要比较7x12x500=42000次，按照每秒1亿次字符串比较的计算速度，计算时间在0.001秒以内。
+
+
+```python
+# 点字成诗机器人
+
+def find_poem_sentence(poems, characters):
+    same_character_number = 0
+    for poem in poems:
+        for ch in poem:
+            if ch in characters:
+                same_character_number += 1
+        if same_character_number == 7:
+            return poem
+    return None
+```
+
+点字成诗机器人代码中：
+- 函数需要两个参数，第一个参数`poems`是所有诗词的列表，其中每个元素为一句诗词；参数`characters`是给定的9或12字的列表。
+- 如果存在正确诗句，则返回诗句；否则，返回None。
+
+可以仿照点字成语游戏来进行诗词大会出题，并编写机器人进行答题。  
+
+8.5 拓展与总结
+
+- random模块
+random模块详解见：https://docs.python.org/3/library/random.html
+这里列举最基本的使用：
+
+操作|结果|说明
+---|---|---
+`random()`|`0.37444887175646646`|返回[0.0, 1.0)之间的随机浮点数
+`uniform(2.5, 10.0)`|`3.1800146073117523`|返回[2.5, 10.0)之间的随机浮点数
+`randrange(10)`|`6`|返回[0,10)之间的随机整数
+`randrange(0, 101, 2)`|`28`|返回[0,101)之间的随机偶数
+`choice(['win', 'lose', 'draw'])`|`win`|从序列中随机选择一个元素
+`shuffle(['win', 'lose', 'draw'])`|`['win', 'draw', 'lose']`|将序列随机打乱
+`sample([10, 20, 30, 40, 50], k=4)`|`[10, 50, 30, 20]`|序列中随机取k个样本
+
+- 字符串方法
+作为一种重要的内置数据类型，python内部提供了字符串专用的很多函方法，具体可见：https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str，这里列出常用的部分如下：
+
+操作|实例|结果|说明
+---|---|---|---
+`str.count(sub[, start[, end]])`|`'北京语言大学在北京宇宙中心'.count('北京')`|2|返回子串`sub`在`str`中的出现次数(子串不重叠计算)，`start`与`end`为可选参数，表示在这个索引的切片内进行`count()`操作。
+`str.endswith(suffix, [start, [, end]])`|`'北京语言大学在北京宇宙中心'.endswith('中心')`|`True`|如果`str`以`suffix`结尾，则返回`True`，否则返回`False`，`start`与`end`为可选参数，表示在这个索引的切片内进行`endswith()`操作。
+`str.startswith(prefix, [start, [, end]])`|`'北京语言大学在北京宇宙中心'.startswith('北')`|`True`|如果`str`以`prefix`开头，则返回`True`，否则返回`False`，`start`与`end`为可选参数，表示在这个索引的切片内进行`endswith()`操作。
+`str.find(sub, [start, [, end]])`|`'北京语言大学在北京宇宙中心'.find('大学')`|`4`|如果`sub`在`str`中，则返回其起始索引，否则返回`-1`，`start`与`end`为可选参数，表示在这个索引的切片内进行`find()`操作。
+`str.index(sub, [start, [, end]])`|`'北京语言大学在北京宇宙中心'.index('大学')`|`4`|与`find()`类似，但当`sub`不在`str`时，会报错：`ValueError`。
+`str.join(iterable)`|`'-'.join('北京语言大学')`|`'北-京-语-言-大-学'`|用`str`将`iterable`中的元素连接。
+`str.lower()`|`'Beijing Language and Culture University'.lower()`|`'beijing language and culture university'`|将`str`中所有能够小写的字母小写并输出新的`str`。
+`str.upper()`|`'beijing language and culture university'.upper()`|`'BEIJING LANGUAGE AND CULTURE UNIVERSITY'`|将`str`中所有能够大写的字母大写并输出新的`str`。
+`str.replace(old, new[, count])`|`'北京语言文化大学'.replace('语言文化', '语言')`|`'北京语言大学'`|将`str`中`old`子串用`new`子串替代并返回新的`str`，`count`参数可选，表示替换的个数(从左至右)。
+`str.split(sep=None, maxsplit=-1)`|`'1,2,3'.split(',')`|`['1', '2', '3']`|将`str`中的对象用分隔符`sep`分割开并作为一个list返回。
+`str.split(sep=None, maxsplit=-1)`|`'1,2,3'.split(',', maxsplit = 1)`|`['1', '2,3']`|参数`maxsplit`为分隔次数，默认为`-1`，表示分隔次数没有限制。
+`str.split(sep=None, maxsplit=-1)`|`'1<>2<>3'.split('<>')`|`['1', '2', '3']`|分隔符`sep`可以是多个字符。
+`str.split(sep=None, maxsplit=-1)`|`'  1    2    3   '.split()`|`['1', '2', '3']`|分隔符`sep`没有指定时，则以空格(或连续空格，含换行、换页及回车等)作为分隔符。
+`str.strip([chars])`|`www.example.com'.strip('cmowz.')`|`'example'`|在`str`的两端，删除`chars`所包含的字符(1或者多个)，并返回剩余的字符串。
+`str.strip([chars])`|`' spacious '.strip()`|`'spacious'`|如不指定`chars`，则默认删除两端的空白字符。
+
+- `open()`
+
+由于文件在使用完毕后如果忘记关闭，有时会产生严重后果如文件内容丢失等，因此，`open()`函数也常常被这样使用：
+
+```python
+# 示例代码8-13
+
+with open(r'd:\temp\'成语.txt') as fh:
+    text = fh.read()
+
+print(text)
+```
+示例代码8-13中：
+- `open()`函数打开了一个文件，然后利用python内置的`with`与`as`关键字将其赋值给`as`后的变量`fh`。
+- 利用`read()`函数读取文件内容后，`with...as`控制的代码块执行完毕，则文件被自动关闭。
+
+打开文件有多种模式，`open()`函数的完整介绍详见：https://docs.python.org/3/library/functions.html?highlight=open#open，常用的如下：
+
+模式|解释
+---|---
+`'r'`|只读方式打开文件(默认模式)
+`'w'`|只写方式打开文件(如无则创建，如有先清空文件)
+`'x'`|只写方式打开文件（如无则创建，如有则报错)
+`'a'`|只追加方式打开文件(如无则创建，如有则在原有内容后面写入)
+`'r+'`|读写方式打开文件(如无则报错，如有则可读可写，读写文件从当前位置开始)
+`'w+'`|写读方式打开文件(如无则创建，如有则可读可写，第一次写入时清空文件，)
+`'a+'`|读追加方式打开文件(如无则创建，如有则可读可写，在原有内容后面写入)
+
+8.6 完整代码
+```python
+# 点字成语游戏完整代码
+
+import random
+
+def win():
+    # 可将小节5中的同名函数代码复制
+    return
+    
+def lose():
+    # 可将小节5中的同名函数代码复制
+    return
+    
+def get_ch_table(line):
+    ch_table = []
+    for ch in line:
+        if ch not in ch_table:
+            ch_table.append(ch)
+    return ch_table
+
+def idiom_robot(file_name):
+    with open(file_name) as fh:
+        text = fh.read()
+    idioms = text.split()
+    idiom = random.choice(idioms)
+    chs = get_ch_table(text.replace(r'\n', ''))
+
+    guess_ch_table = [ch for ch in idiom]
+    while len(guess_ch_table) < 6:
+        ch = random.choice(chs)
+        if ch not in guess_ch_table:
+            guess_ch_table.append(ch)
+    
+    random.shuffle(guess_ch_table)
+    
+    for i in range(0,6,2):
+        print(guess_ch_table[i], guess_ch_table[i+1])
+    
+    return idiom
+
+def main():
+    filename = r'd:\temp\idioms_correct.txt'
+    score = 10
+    while score >= 0:
+        real_idiom = idiom_robot(filename)
+        answer_idiom = input('请输入猜测成语，回车结束，直接回车表示退出游戏：')
+        if answer_idiom == real_idiom:
+            print('答对了，加十分')
+            score += 10
+            print('你当前的分数是：', score)
+            if score == 100:
+                win()
+                return
+        elif answer_idiom == '':
+            print('退出游戏。')
+            print('你最后的分数是：', score)
+            return
+        else:
+            score -= 10
+            print('答错了，减十分')
+            print('成语其实是：', real_idiom)
+            print('你当前的分数是：', score)
+    else:
+        lose()
+        return
+
+if __name__ == '__main()__':
+    main()
+```
+
+8.9 实战练习
+ - 成语接龙游戏
+ - 飞花令游戏
+ - 完整诗词游戏
+ - 实现完整点字成诗机器人
