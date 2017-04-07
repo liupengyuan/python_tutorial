@@ -110,7 +110,7 @@ print('all second:', all([5, 10, 'fake', None, True]))
 - 键入如下代码并观察运行结果。
 
 ```python
-# 序列之list示例2
+# 序列之list示例4
 words = ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
 
 i = 0
@@ -119,12 +119,12 @@ while i < 9:                #目测words中有9个word
     i += 1
 ```
 
-上述代码利用循环，取出list中的各个对象，这个过程称作**遍历**。
+上述代码利用循环，取出list中的各个对象，这个过程称作**遍历**或**迭代**。  
  - 键入如下代码并观察运行结果。
 
 ```python
-# 序列之list示例3
-numbers = []
+# 序列之list示例5
+numbers = []  # numbers = list()
 print(numbers)
 
 i = 0
@@ -139,7 +139,7 @@ while i < len(numbers):
     i += 1
 ```
 
-- `[]`是空的list，可赋值给一个对象，该对象类型即成为list，值为一个空的list：`[]`。例2,3中`words`与`numbers`分别通过赋值语句得到了list类型以及值，这个过程称作**初始化**。
+- `[]`是空的list，可赋值给一个对象，该对象类型即成为list，值为一个空的list：`[]`，或者用`numbers = list()`，两者等价。例1-3中`words`与`numbers`分别通过赋值语句得到了list类型以及值，这个过程称作**初始化**。
 - `append()`是python内置函数，但与前面模块内的函数和我们先前自定义的函数不同，`append()`是list类型对象的函数，任意一个对象被初始化成list类型以后，均可以使用`append()`函数，一般将类型的函数称为**方法**，如`append()`方法。  
 `append()`方法的功能是向一个list对象在尾部插入对象，用法是`list对象.append(对象)`，这个list对象可以是空list也可以非空，所加入对象的编号会立即得到对应位置的编号索引。  
 - `len(...)`是python内置函数，用法为`len(iterable)`，其中的参数`iterable`是一个序列，len函数可以返回该序列内所含元素的个数。
