@@ -1,0 +1,670 @@
+6. 主任务：倒序打印用户输入的n个单词，共打印10次。
+ 
+6.1 任务简介与分析  
+任务就是接受用户输入一个整数n，表示将要输入的单词个数，然后用户依次输入n个字符串，程序能够倒序将这n个字符串输出，重复10次。  
+这个任务看起来似乎比较简单，比如是不是可以在while循环内想办法搞定，但实际上以我们目前所接触到的python编程知识，还真的无法实现。为什么呢？先假设是正序输出打印一次，程序可编写如下：
+
+```python
+# 正序输出单词示例1
+n = int(input('请输入要输入的单词个数（整数），回车结束'))
+i = 0
+while i < n:
+    word = input('请输入一个单词，回车结束')
+    print(word)
+    i += 1
+```
+
+但是倒序输出意味着，用户输入到最后一个单词后，我们才能够开始输出。这样，之前输入的n-1个单词，程序必须要‘记住’，换成程序语言，就是要保存。如果需要保存的变量个数是预先知道的，确定的，则可以处理，比如可以这样：
+
+```python
+# 正序输出单词示例2，假设确定会输入5个单词
+word1 = None
+word2 = None
+word3 = None
+word4 = None
+word5 = None
+
+i = 0
+while i < 5:
+    word = input('请输入一个单词，回车结束')
+    if word1 == None:
+        word1 = word
+    elif word2 == None:
+        word2 = word
+    elif word3 == None:
+        word3 = word
+    elif word4 == None:
+        word4 = word
+    else:
+        word5 = word
+    i += 1
+    
+print(word5)
+print(word4)
+print(word3)
+print(word2)
+print(word1)
+```
+
+上述代码中的变量`word1`到`word5`完成的功能实际比较类似，代码的样子感觉也非常重复，`word1`到`word5`我们是手工编号来区别不同的变量，以便可以保存不同的变量值。要是能有个很大的可以放变量的容器，每个变量放进去的时候，还能自动给个编号就好了。是的，可以的，python可以的。
+
+6.2 序列之list  
+ - 键入如下代码并观察运行结果。
+
+```python
+# 序列之list示例1
+
+numbers = [1, 2, 3, 4, 5]
+
+print(numbers[1])
+print(numbers[2])
+print(numbers[3])
+print(numbers[4])
+print(numbers[0])
+print(numbers[5])     # 错误，越界
+```
+
+ - python语言用**序列**来存储一系列对象，其中每个对象对应一个从0开始的连续编号。
+ - `list`数据类型是一种序列，中文名称为**列表**可以存放数字、字符串等各类对象，存放的方式是：`[对象1, 对象2, ... ,对象n]`，即对象均放在`[]`之间，且用`,`分隔。
+ - 本段代码中，[1, 2, 3, 4, 5]就是一个list，这个list被赋值给了numbers，于是number也成为list类型，其值就是[1, 2, 3, 4, 5]。
+ - 序列中的对象根据其编号来进行定位，这个编号一般称为**索引**，取得序列某索引对象的方法是：`序列名[索引]`。
+ - 如果索引没在序列的范围之内，此时取该索引位置的对象，解释器就会提示出错。一般称为**索引越界**。
+ - 键入如下代码，运行多次，确保每个分支均被执行到，并观察运行结果。
+
+```python
+# 序列之list示例2
+
+numbers = [1, 2, 3, 4, 5]
+n = int(input('请输入一个整数，回车结束'))
+
+if n in numbers:
+    print('Yes,', n, 'is in numbers.')
+else:
+    print('No,', n, 'is not in numbers.')
+    
+print(--------------分割线---------------)
+
+if n+1 not in numbers:
+    print('No,', n+1, 'is not in numbers.')
+else:
+    print('Yes,', n+1, 'is in numbers.')
+
+```
+
+- `in`是python关键字，可以用来判断某个对象是否在一个序列中，基本格式是：`对象 in 序列`，构成一个条件表达式，如果对象在序列中，则表达式的值为`True`，否则为`False`。  
+- 否定格式：`对象 not in 序列`，该条件表达式的值与基本格式的相反。其中`not`也是python关键字，意思是`不`。  
+- 与`in`相关，有两个内置函数`any()`和`all()`，但常用程度远不及`in`。
+- 键入如下代码并观察运行结果。
+
+```python
+# 序列之list示例3
+print('any first:', any([0, 0, '', None, False]))
+print('any second:', any([0, 5, '', None, False]))
+print('all first:', all([5, 6, 'word', True]))
+print('all second:', all([5, 10, 'fake', None, True]))
+```
+
+- `any(...)`是python内置函数，可以用来判断某个序列中是否存在真值，如果有，就返回True，如果没有（或者序列为空）则返回False。
+- `all(...)`是python内置函数，可以用来判断某个序列中是否均为真值，如果均是，就返回True，否则返回False。
+
+- 键入如下代码并观察运行结果。
+
+```python
+# 序列之list示例4
+words = ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
+
+i = 0
+while i < 9:                #目测words中有9个word
+    print(words[i])
+    i += 1
+```
+
+上述代码利用循环，取出list中的各个对象，这个过程称作**遍历**或**迭代**。  
+ - 键入如下代码并观察运行结果。
+
+```python
+# 序列之list示例5
+numbers = []  # numbers = list()
+print(numbers)
+
+i = 0
+while i < 9:
+    numbers.append(i)
+    i += 1
+
+i = 0
+while i < len(numbers):
+    print('numbers[', i, ']=', numbers[i], sep = '')
+    print(numbers)
+    i += 1
+```
+
+- `[]`是空的list，可赋值给一个对象，该对象类型即成为list，值为一个空的list：`[]`，或者用`numbers = list()`，两者等价。例1-3中`words`与`numbers`分别通过赋值语句得到了list类型以及值，这个过程称作**初始化**。
+- `append()`是python内置函数，但与前面模块内的函数和我们先前自定义的函数不同，`append()`是list类型对象的函数，任意一个对象被初始化成list类型以后，均可以使用`append()`函数，一般将类型的函数称为**方法**，如`append()`方法。  
+`append()`方法的功能是向一个list对象在尾部插入对象，用法是`list对象.append(对象)`，这个list对象可以是空list也可以非空，所加入对象的编号会立即得到对应位置的编号索引。  
+- `len(...)`是python内置函数，用法为`len(iterable)`，其中的参数`iterable`是一个序列，len函数可以返回该序列内所含元素的个数。
+
+现在可以直接打印一次了。
+
+```python
+# 倒序打印用户输入的n个单词
+words = []
+n = int(input('请输入一个整数，表示将要输入的单词数，回车结束。'))
+
+i = 0
+while i < n:
+    word = input('请输入一个单词，回车结束。')
+    words.append(word)
+    i += 1
+
+while i > 0:
+    i -= 1
+    print(words[i])
+```
+
+虽然我们顺利实现打印一次倒序打印用户输入的n个单词，但似乎总觉得用这个`list`有些别扭，特别是在用while循环遍历时，必须得先得到`list`对象内的元素个数，还得控制好索引，以防出错。  
+你的感觉是对的，python提供了更酸爽的遍历方法。  
+
+6.3 for循环  
+- 键入以下代码并观察执行结果
+
+```python
+words = ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
+for word in words:
+    print(word)
+```
+
+- `for`是python关键字，与`in`共同组成`for`循环。`for`循环从序列中依次取对象(本例中就是从words中依次取出word)，每取一次对象执行一次语句块，直到取完序列中最后一个元素。基本用法如下：
+
+```python
+for 对象 in 序列:
+    语句块
+```
+
+对序列遍历时，while循环与for循环可以互相转换，但for循环更简单。键入如下代码并执行：
+
+```python
+# for 与 while 循环转换与对比
+
+numbers = [1, 2, 3, 4, 5, 6, 7]
+
+# while循环实现累加
+total = 0
+i = 0
+while i < 7:
+    total += numbers[i]
+    i += 1
+    
+print(total)
+
+# for循环实现累加
+total = 0
+for number in numbers:
+    total += number
+    
+print(total)
+```
+
+for循环还经常被用来取得一系列数字或者是做指定次数的循环。键入如下代码并执行：
+
+```python
+for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
+    print(i)
+
+print('-------------分隔符--------------')
+
+for i in range(10):
+    print(i)
+
+print('-------------分隔符--------------')
+
+for i in range(10):
+    print('指定循环打印10次')
+```
+
+本段代码中的`range()`是一个内置函数，基本用法是在`()`中放置一个整数参数，如：`range(n)`。`range(n)`在for循环中将会被调用n次，`range(n)`每次均会返回一个数字，数字从0开始到n-1结束，因此其区间是[0,n)，共会返回n个数字。  
+我们曾经利用while循环来求1+2+...n，其实用for循环更为方便，键入如下代码并执行：
+
+```python
+# for 循环求和
+
+n = int(input('请输入一个整数n，回车结束。'))
+total = 0
+for i in range(n+1):
+    total += i
+    
+print('和为', total)
+```
+
+6.4 循环的嵌套
+- 键入以下代码并观察执行结果。
+
+```python
+for i in range(3):
+    for j in range(3):
+        for k in range(2):
+            print(i, j, k, '=', i*j*k)
+```
+
+每个for循环结构都有自己的循环体，多个for循环嵌套时，循环体内包含下一层次的for循环结构，嵌套一样依靠代码缩进来区分层次。
+- 键入以下代码并观察执行结果。
+
+```python
+for i in range(3):
+    for j in range(3):
+        for k in range(2):
+            print(i, j, k, '=', i*j*k)
+            if i==2:
+                break;
+
+print('-------------分割线-------------')
+for i in range(3):
+    print(i)
+    if i==2:
+        break;
+```
+
+与while循环一样，`break`关键字可以立即跳出当前层循环。  
+这里留一个问题请读者自行思考与试验：除了可用`break`跳出当前循环外，就目前而言，我们是否还有其他手段，在循环结束前跳出循环呢？
+- 键入以下代码并观察执行结果。
+
+```python
+
+numbers = []
+for i in range(10):
+    j = 0
+    while j < 3:
+        numbers.append(i)
+        j += 1
+print(numbers)
+```
+
+本段代码实现了for与while循环之间的嵌套。
+
+6.5 巩固与提高
+
+- 任务1：利用蒙特卡洛方法计算π的值
+
+python自身内置了`π`及`e`的较为精确的数值：
+
+```python
+
+import math
+print(math.pi)
+print(math.e)
+```
+
+计算π的值在现代已经有很多种方式，比如用数列。
+蒙特卡洛（Monte Carlo）方法，又称随机抽样或统计试验方法，属于计算数学的一个分支，它是在上世纪四十年代中期为了适应当时原子能事业的发展而发展起来的。目前随着计算机计算能力的提升，数学、物理等多领域均得到广泛应用。当所要求解的问题（问题解析解很难得到的情况下）是某种事件出现的概率，或者是某个随机变量的期望值时，它们可以通过某种“试验”的方法，得到这种事件出现的频率，或者这个随机变数的平均值，并用它们作为问题的解。详细解释见：https://en.wikipedia.org/wiki/Monte_Carlo_method
+
+蒙特卡洛方法一般采用如下模式：
+
+- 定义一个可能的输入域；
+- 从输入域的一个可能的概率分布产生随机的输入；
+- 对上述随机输入进行确定性的计算；
+- 累积并求得结果。
+
+比如，对下图所示的正方形与扇形，扇形面积与正方形面积的比是π/4,这样，π的值就可以用蒙特卡洛方法来估计（计算）:
+
+- 画一个正方形，并做其内切圆；
+- 以均匀分布向正方形上随机进行散点；
+- 计算在扇形内的点的个数以及全部点的个数；
+- 以4*扇形内点的个数/全部点的个数来估计π的值。
+
+![test](https://upload.wikimedia.org/wikipedia/commons/8/84/Pi_30K.gif)
+
+好，让我们编程实现之。
+
+```python
+#蒙特卡洛方法求π的值
+
+import random
+
+def monte_carlo_method(n):
+    inside_number = 0
+    for i in range(n):
+        x, y = random.random(),random.random()
+        if x*x+y*y < 1:
+            inside_number += 1
+    return 4*inside_number/n
+
+
+# 测试
+number = int(input('input times please:'))
+monte_carlo_method(number)
+
+```
+
+好，大功告成，但是感觉意犹未尽。我们期望能自己能初步实现个直观的可视化来展现效果。
+这里介绍python可视化交互库Bokeh，最突出的特点是直接针web浏览器进行可视化展示。另一个使用较多的库是matplotlib，网上教程很多，请读者自行学习。
+- Bokeh的安装。  
+如果已经安装了Anaconda，则Bokeh库已经在内，无需另行安装。
+如果只安装了python及jupyter，则需要Bokeh需要单独安装：
+   - 进入powershell
+   - pip install bokeh 
+   -  安装完毕
+
+
+```python
+
+# 引入figure，output_file及show函数
+from bokeh.plotting import figure, output_file, show
+import random
+
+# 设定绘图结果将输出到html文件'lines.html'            
+output_file("lines.html")
+```
+
+经过以上几行代码后，就完成了绘图准备工作。
+
+```python
+# 准备好画布，题目为'蒙特卡洛方法求π'，x轴坐标名称为'x'，y轴坐标名称为'y'
+p = figure(title="蒙特卡洛方法求π", x_axis_label='x', y_axis_label='y')
+```
+
+至此，准备好了画布。
+
+```python
+inside_number = 0
+for i in range(500):
+    x, y = random.random(),random.random()
+    if x*x+y*y < 1:
+        p.circle(x, y, size=3, color = 'red')   # circle为画圆函数，x，y为坐标，size为大小，color为颜色
+    else:
+        p.circle(x, y, size=3, color = 'blue')
+```
+
+至此，500个圆点儿已经画在了画布上，但是还需要加一行代码让其显示出来。
+
+```python
+# 显示结果
+show(p)
+```
+
+我们还可以将画布直接嵌入到jupyter notebook之中，只需要略作修改。
+
+```python
+from bokeh.plotting import figure, output_file, show
+from bokeh.io import output_notebook
+import random
+
+# 设定绘图结果将输出到notebook中'            
+output_notebook()
+
+# 画点
+inside_number = 0
+for i in range(500):
+    x, y = random.random(),random.random()
+    if x*x+y*y < 1:
+        p.circle(x, y, size=3, color = 'red')   # circle为画圆函数，x，y为坐标，size为大小，color为颜色
+    else:
+        p.circle(x, y, size=3, color = 'blue')
+        
+# 显示结果
+show(p)
+```
+
+好，至此，我们完成了第一个数据可视化。  
+Bokeh的功能十分强大，进一步学习可参考：http://bokeh.pydata.org/en/latest/  
+也可以fork项目：https://github.com/bokeh/  
+
+- 任务2：打印一个乘法九九表。  
+我们先做如下尝试：
+
+```python
+for i in range(10):
+    for j in range(10):
+        print('|', i, 'x', j, '=', i*j, '|')
+    print('-----------------------------------------------------------------------------------------------------------')
+```
+
+好吧，我们打印出来的比九九表还厉害，但这些乘数被乘数中出现的0并不是我们想要的。我们可以通过给`i`及`j`加1，然后再控制循环的方式解决，请自行思考。但python为`range()`提供了更方便的用法。
+
+- 键入以下代码并观察执行结果。
+```python
+for i in range(1, 10):
+    for j in range(1, 10):
+        print('|', i, 'x', j, '=', i*j, '|')
+    print('-----------------------------------------------------------------------------------------------------------')
+```
+
+可以为`range()`函数同时设置起始和终点参数，即`range(start, end)`，调用可以依次得到[stard, end)之间的整数，起始参数如果没有给出，则默认从0开始。完整的`range()`函数还有第三个参数，即间隔，请看示例：
+
+```python
+for i in range(1, 100, 10):
+    print(i)
+print('-----------------分隔线------------------')
+for i in range(100, 10, -10):
+    print(i)
+```
+
+这么快就搞定了九九表的感觉很不错，但是我们还能做得更好。我们希望每个分割线之间的算式，是连成一排打印出来的。
+
+- 键入如下代码观察执行结果。
+
+```python
+for i in range(1, 10):
+    for j in range(1, 10):
+        print('|', i, 'x', j, '=', i*j, '|', end='')
+    print()
+    print('---------------------------------------------------------------------------------------------------------------------------')
+```
+
+`print()`函数除了一些打印的位置参数以及`sep`关键字参数外，`end`是另一个关键字参数，用来控制当前`print`语句行尾打印字符的值，当不设置`end`关键字时，默认是打印换行。
+已经完成的九九表基本已经可以使用了，但我们是希望尽量做到完美。目前的不完美主要是因为`i*j`的结果可能是1位数，也可能是2位数，造成打印时候对不齐。因此我们需要用`print()`函数控制打印，使格式统一。
+
+- 键入如下代码观察执行结果。
+
+```python
+
+# 基本用法 1：
+print('a={0},b={1},c={2}'.format(0,1,2))
+print('a={1},b={0},c={2}'.format(0,1,2))
+print('----------分隔符-------------')
+# 基本用法 2：
+n=20
+print('{:3},{:3}'.format(n,10*n))
+print('{:3},{:3}'.format(10*n,n))
+```
+
+`format()`是字符串类型的一个方法，可以利用`format()`方法来进行字符串的格式统一。  
+基本用法1：`'xxx{位置}xxx{位置}...xxx{位置}xxx'.format(变量, 变量..., 变量)`。format中的多个变量是一个序列，从0开始自动连续编号，左侧字符串内的位置就是变量的索引(不要求一定顺序排列)，按照索引位置，由右侧各个变量的值来替换`{位置}`。  
+基本用法2：`'xxx{:整数}xxx{:整数}...xxx{:整数}xxx'.format(变量, 变量..., 变量)`。左侧字符串内如果没有指定索引，则按照右侧序列变量顺序替换字符串内的`{:整数}`。`{:整数}`表示替换变量在字符串中的格式，其中的`整数`表示替换变量占据的宽度(字符个数)。  
+好，就用到九九表中去吧！
+
+- 键入如下代码观察执行结果。
+
+```python
+
+print('------------------------------------------------------------------------------------------------------------')
+for i in range(1, 10):
+    for j in range(1, 10):
+        print('|{} x {} = {:2}|'.format(i, j, i*j), end = '')
+    print()
+    print('------------------------------------------------------------------------------------------------------------')
+```
+
+6.6 拓展与总结  
+
+- 字符转义  
+ 包含在单引号 ('...')或者双引号中的 ("...")均是字符串。 `\` can be used to escape quotes. 实现字符转义：
+```python
+
+print('doesn\'t')   # use \' to escape the single quote.
+print("doesn't")    # or use double quotes instead.
+s = 'First line.\nSecond line.'  # \n means newline
+s
+print(s)  # with print(), \n produces a new line
+```
+
+如果想使在字符串中的`\`失效，则需要在字符串的首个引号前加一个字母`r`：
+
+```python
+
+print('C:\some\name')  # here \n means newline!
+print(r'C:\some\name')  # note the r before the quote
+```
+
+比较常用的python转义字符如下：
+
+转义字符|转义后含义|
+---|----|
+ `\\` |	Backslash (\)  
+ `\'`|Single quote (')  
+ `\"`|	Double quote (")  
+ `\a`|	ASCII Bell (BEL)  
+ `\b`|	ASCII Backspace (BS)  
+ `\f`|	ASCII Formfeed (FF)	
+ `\n`|	ASCII Linefeed (LF)  
+ `\r`|	ASCII Carriage Return (CR)  
+ `\t`|	ASCII Horizontal Tab (TAB)  
+
+
+- 列表推导  
+对可迭代（遍历）对象如list，比较频繁的操作是：遍历list，取符合条件的元素子集并对其中每个元素进行某些操作，python提供了类似操作的简洁实现方式。
+
+```python
+
+import math
+
+numbers = [i for i in range(10)]
+print(numbers, '\n')
+
+numbers = [i+j for i in range(10) for j in range(10)]
+print(numbers, '\n')
+
+numbers = [math.sqrt(i) for i in range(10) if i%2==0]
+print(numbers, '\n')
+
+words = ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
+selected_words = [word for word in words if len(word) > 3]
+print(selected_words)
+```
+
+有关列表推导及相关使用，后续还将陆续介绍。
+
+- `sum(...)`, `max(...)`, `min(...)`函数  
+即实现对序列求和、求最大值，最小值的函数。
+
+```python
+
+numbers = [i+1 for i in range(10) if i%2==0]
+print(sum(numbers), '\n')
+
+numbers = [5, 7, 12, 100, 45]
+print(max(numbers), min(numbers), '\n')
+```
+
+- `pass`, `continue`, `break`, `return`, `exit()`
+
+以上关键字/函数的区别与练习可用以下表格概括： 
+
+关键字|功能|
+---|---
+pass|什么也不做，纯占位用|
+continue|跳出本次循环
+break|跳出本层循环
+return|退出函数
+exit()|退出程序
+
+```python
+#pass, continue, break, return, exit()区别联系示例
+
+for i in range(10):
+    pass
+    print(i)
+    
+print('-----------分割线----------------')
+
+for i in range(10):
+    continue
+    print(i)
+    
+print('-----------分割线----------------')
+
+for i in range(10):
+    for j in range(10):
+        print('i={},j={}'.format(i,j))
+        break
+    
+print('-----------分割线----------------')
+
+def test():
+    for i in range(10):
+        for j in range(10):
+            print('i={},j={}'.format(i,j))
+            return
+
+test()
+
+print('-----------分割线----------------')
+
+for i in range(10):
+    for j in range(10):
+        print('i={},j={}'.format(i,j))
+        exit()
+        
+print('-----------分割线----------------')
+```
+
+- `str.format()`
+
+格式字符串的`format()`方法很多时候，配合`print()`一起使用，具体内容可参考：
+https://docs.python.org/3/library/string.html#formatstrings  
+这里仅举一些实例进行一般的用法说明。
+
+```python
+# str.format()示例1
+
+print('{}, {}, {}'.format('a', 'b', 'c'))
+print('{2}, {1}, {0}'.format('a', 'b', 'c'))
+print('{0}{1}{0}'.format('abra', 'cad'))     # arguments' indices can be repeated
+```
+
+```python
+# str.format()示例2
+
+print('Coordinates: {latitude}, {longitude}'.format(latitude='37.24N', longitude='-115.81W'))
+
+coord = [3, 5]
+print('X: {0[0]};  Y: {0[1]}'.format(coord))
+```
+
+```python
+# str.format()示例3
+
+print('{:<30}'.format('left aligned'))
+print('{:>30}'.format('right aligned'))
+print('{:^30}'.format('centered'))
+print('{:*^30}'.format('centered'))     # use '*' as a fill char
+```
+
+```python
+# str.format()示例4
+
+print('{:+f}; {:+f}'.format(3.14, -3.14))
+print('{: f}; {: f}'.format(3.14, -3.14))
+
+print('{:,}'.format(1234567890))
+```
+
+6.7 完整代码  
+
+```python
+# 倒序打印用户输入的n个单词10次
+words = []
+n = int(input('请输入一个整数，表示将要输入的单词数，回车结束。'))
+
+for i in range(n):
+    word = input('请输入一个单词，回车结束。')
+    words.append(word)
+
+for i in range(10):
+    for j in range(n-1, -1,-1):
+        print(words[j])
+```
+
+6.8 习题
+- 将前面几章用while循环的习题，用for循环实现，并尽量写成函数。
+- 写函数，可求两个向量的夹角余弦值，向量可放在list中。主程序调用该函数。
+- 挑战性习题：python语言老师为了激励学生学python，自费买了100个完全相同的Macbook Pro，分给三个班级，每个班级至少分5个，用穷举法计算共有多少种分法？
