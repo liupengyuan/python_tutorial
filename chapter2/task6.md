@@ -254,14 +254,14 @@ for i in range(3):
     for j in range(3):
         for k in range(2):
             print(i, j, k, '=', i*j*k)
-            if i==2:
-                break;
+            if i==1:
+                break
 
 print('-------------分割线-------------')
 for i in range(3):
     print(i)
-    if i==2:
-        break;
+    if i==1:
+        break
 ```
 
 与while循环一样，`break`关键字可以立即跳出当前层循环。  
