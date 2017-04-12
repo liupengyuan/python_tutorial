@@ -130,12 +130,12 @@ print(numbers)
 i = 0
 while i < 9:
     numbers.append(i)
+    print(numbers)
     i += 1
 
 i = 0
 while i < len(numbers):
     print('numbers[', i, ']=', numbers[i], sep = '')
-    print(numbers)
     i += 1
 ```
 
