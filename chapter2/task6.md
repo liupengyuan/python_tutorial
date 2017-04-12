@@ -493,7 +493,8 @@ for i in range(1, 10):
 print('doesn\'t')   # use \' to escape the single quote.
 print("doesn't")    # or use double quotes instead.
 s = 'First line.\nSecond line.'  # \n means newline
-s
+s  
+# without print(), \n is included in the output
 print(s)  # with print(), \n produces a new line
 ```
 
@@ -666,5 +667,8 @@ for i in range(10):
 
 6.8 习题
 - 将前面几章用while循环的习题，用for循环实现，并尽量写成函数。
+- 写函数，返回一个list中所有数字的和
+- 写函数，返回一个list中的最小值
+- 写函数，返回某个元素/对象在一个list中的位置，如果不在，则返回-1.
 - 写函数，可求两个向量的夹角余弦值，向量可放在list中。主程序调用该函数。
 - 挑战性习题：python语言老师为了激励学生学python，自费买了100个完全相同的Macbook Pro，分给三个班级，每个班级至少分5个，用穷举法计算共有多少种分法？
