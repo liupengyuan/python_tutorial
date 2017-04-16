@@ -1081,6 +1081,7 @@ Similar to insort_left(), but inserting x in a after any existing entries of x.
 .|sort()|sorted
 ---|---|---
 用法|`sort(*, key=None, reverse=None)`|`sorted(*, key=None, reverse=None)`
+---|---|---
 相同1|内置，快速排序，针对列表|内置，快速排序，针对列表
 不同1|就地排序，原列表改变|返回排序后的新列表，原列表不变
 不同2|2个关键字参数(可选)|1个序列参数(必选)，2个关键字参数(可选)
