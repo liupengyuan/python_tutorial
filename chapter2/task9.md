@@ -1065,7 +1065,7 @@ Similar to insort_left(), but inserting x in a after any existing entries of x.
 函数或操作|示例|结果|说明
 ----|---|---|---
 `union(*others)`|`A.union(B, C)`|`{1,2,3,4,5,6,7,8,9,'1','2','3','4','5'}`|求并集
-`set | other |...`|`A|B|C`|同上|求并集
+`set \| other\| ...`| `A\|B\|C` |同上|求并集
 `intersection(*others)`|`A.intersection(B, C, D)`|`{1,'1'}`|求交集
 `set & other &...`|`A & B & C & D`|同上|求交集
 `difference(*others)`|`A.difference(B)`|`{2,3,4,5}`|求差集
