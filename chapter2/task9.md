@@ -1070,8 +1070,8 @@ Similar to insort_left(), but inserting x in a after any existing entries of x.
 `set & other &...`|`A & B & C & D`|同上|求交集
 `difference(*others)`|`A.difference(B)`|`{2,3,4,5}`|求差集
 `set - other -...`|`A - B`|同上|求差集
-`symmetric_difference(other)`|`A.symmetric_difference(B)`|`{2,3,4,5,6,7,8,9}`|A|B - A&B
-`set - other -...`|`A ^ B`|A|B - A&B
+`symmetric_difference(other)`|`A.symmetric_difference(B)`|`{2,3,4,5,6,7,8,9}`|A\|B - A&B
+`set - other -...`|`A ^ B`|A\|B - A&B
 
 更多操作以及不可变集合`frozenset`等，见：https://docs.python.org/3/library/stdtypes.html?set#set-types-set-frozenset
 
