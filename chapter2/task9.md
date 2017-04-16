@@ -1186,6 +1186,8 @@ print(c | d)                       # union:  max(c[x], d[x])
 
 Counter详细介绍，见：https://docs.python.org/3/library/collections.html?Counter#counter-objects
 
+- 数据类型汇总（以后再写）
+
 9.10 完整代码
 
 ```python
