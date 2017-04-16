@@ -20,13 +20,13 @@
 #示例程序9-1
 
 with open(r'd:\temp\test.txt', 'w') as fw, open(r'd:\temp\语料.txt') as fr:
-   line_number = 0
-   for line in fr:
-       if line_number < 5000:
-           fw.write(line)
-           line_number += 1
-       else:
-           break
+    line_number = 0
+    for line in fr:
+        if line_number < 5000:
+            fw.write(line)
+            line_number += 1
+        else:
+            break
 ```
 
 示例程序9-1中：
