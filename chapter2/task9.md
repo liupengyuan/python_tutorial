@@ -1009,7 +1009,7 @@ print(palindrome(seq))
 
 - 任务2：字频的统计
 
-完全可以利用与词表词频类似的方法来统计一个文本文件的字表字频，但是我们现在已经得到了词频统计的结果，完全可以在这个基础上直接得到字表字频，统计时间也会大大缩短。
+完全可以利用与词表词频类似的方法来统计一个文本文件的字表字频，但是我们现在已经得到了词频统计的结果，如果可以在这个基础上直接得到字表字频，统计时间就会大大缩短。
 
 ```python
 #coding: utf-8
@@ -1038,15 +1038,23 @@ for ch, freq in ch_table.items():
 - bisect模块
 主要有六个方法：
 
-`bisect.bisect_left(a, x, lo=0, hi=len(a))`。Locate the insertion point for x in a to maintain sorted order. The parameters lo and hi may be used to specify a subset of the list which should be considered; by default the entire list is used. If x is already present in a, the insertion point will be before (to the left of) any existing entries. The return value is suitable for use as the first parameter to list.insert() assuming that a is already sorted.   
+`bisect.bisect_left(a, x, lo=0, hi=len(a))`。
+
+Locate the insertion point for x in a to maintain sorted order. The parameters lo and hi may be used to specify a subset of the list which should be considered; by default the entire list is used. If x is already present in a, the insertion point will be before (to the left of) any existing entries. The return value is suitable for use as the first parameter to list.insert() assuming that a is already sorted.   
 The returned insertion point i partitions the array a into two halves so that all(val < x for val in a[lo:i]) for the left side and all(val >= x for val in a[i:hi]) for the right side.
 
-`bisect.bisect_right(a, x, lo=0, hi=len(a))`，`bisect.bisect(a, x, lo=0, hi=len(a))`。Similar to bisect_left(), but returns an insertion point which comes after (to the right of) any existing entries of x in a.  
+`bisect.bisect_right(a, x, lo=0, hi=len(a))`，`bisect.bisect(a, x, lo=0, hi=len(a))`。
+
+Similar to bisect_left(), but returns an insertion point which comes after (to the right of) any existing entries of x in a.  
 The returned insertion point i partitions the array a into two halves so that all(val <= x for val in a[lo:i]) for the left side and all(val > x for val in a[i:hi]) for the right side.
 
-`bisect.insort_left(a, x, lo=0, hi=len(a))`。Insert x in a in sorted order. This is equivalent to a.insert(bisect.bisect_left(a, x, lo, hi), x) assuming that a is already sorted. Keep in mind that the O(log n) search is dominated by the slow O(n) insertion step.
+`bisect.insort_left(a, x, lo=0, hi=len(a))`。
 
-`bisect.insort_right(a, x, lo=0, hi=len(a))`，`bisect.insort(a, x, lo=0, hi=len(a))`。Similar to insort_left(), but inserting x in a after any existing entries of x.
+Insert x in a in sorted order. This is equivalent to a.insert(bisect.bisect_left(a, x, lo, hi), x) assuming that a is already sorted. Keep in mind that the O(log n) search is dominated by the slow O(n) insertion step.
+
+`bisect.insort_right(a, x, lo=0, hi=len(a))`，`bisect.insort(a, x, lo=0, hi=len(a))`。
+
+Similar to insort_left(), but inserting x in a after any existing entries of x.
 
 详细用法见：https://docs.python.org/3/library/bisect.html
 
@@ -1056,8 +1064,8 @@ The returned insertion point i partitions the array a into two halves so that al
 
 函数或操作|示例|结果|说明
 ----|---|---|---
-`union(*others)`|`A.union(B, C, D)`|`{1,2,3,4,5,6,7,8,9,'1','2','3','4','5','6','7','8','9'}`|求并集
-`set | other |...`|`A|B|C|D`|同上|求并集
+`union(*others)`|`A.union(B, C)`|`{1,2,3,4,5,6,7,8,9,'1','2','3','4','5'}`|求并集
+`set | other |...`|`A|B|C`|同上|求并集
 `intersection(*others)`|`A.intersection(B, C, D)`|`{1,'1'}`|求交集
 `set & other &...`|`A & B & C & D`|同上|求交集
 `difference(*others)`|`A.difference(B)`|`{2,3,4,5}`|求差集
