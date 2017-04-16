@@ -428,8 +428,8 @@ hanoi(5, 'A', 'B', 'C')
 - 如果low>high，说明没有找到，返回-1；
 - 否则，取中点位置mid = (low+high)//2；
   - 如果number == numbers[mid]，则返回mid，此即为所得索引；
-  - 否则如果 number > numbers[mid]，就**采用bi_search()**在[mid+1, high]之间查找number；
-  - 否则，就**采用bi_search()**在[low, mid-1]之间查找number。
+  - 否则如果 number > numbers[mid]，就 **采用方法：bi_search()** 在[mid+1, high]之间查找number；
+  - 否则，就 **采用方法：bi_search()** 在[low, mid-1]之间查找number。
 
  
 (图)
