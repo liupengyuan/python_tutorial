@@ -116,7 +116,7 @@ for i in range(1, len(line)*2+1):
 ```python
 # 示例代码 6
 
-line = '天天天天天天'
+line = '天'*6
 for i in range(1, len(line)*2+1):
     print((len(line)*2-i)*' ' + line[0]*i, end='')
     print()
