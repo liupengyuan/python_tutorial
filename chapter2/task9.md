@@ -424,9 +424,11 @@ hanoi(5, 'A', 'B', 'C')
 9.4 二分查找
 
 我们回到二分查找，先从宏观上对其进行分析，将整个过程用递归框架来描述：  
+
 - 假定存在一个有效的二分查找的方法，名字叫`bi_search()`，能够在正序numbers序列的索引区间[low, high]之间查找number的索引。
 - 如果low>high，说明没有找到，返回-1；
 - 否则，取中点位置mid = (low+high)//2；
+
   - 如果number == numbers[mid]，则返回mid，此即为所得索引；
   - 否则如果 number > numbers[mid]，就 **采用方法：bi_search()** 在[mid+1, high]之间查找number；
   - 否则，就 **采用方法：bi_search()** 在[low, mid-1]之间查找number。
