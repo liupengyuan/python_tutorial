@@ -371,7 +371,7 @@ random模块详解见：https://docs.python.org/3/library/random.html
 `sample([10, 20, 30, 40, 50], k=4)`|`[10, 50, 30, 20]`|序列中随机取k个样本
 
 - 字符串方法
-作为一种重要的内置数据类型，python内部提供了字符串专用的很多函方法，具体可见：https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str，这里列出常用的部分如下：
+作为一种重要的内置数据类型，python内部提供了字符串专用的很多函方法，具体可见：https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str 这里列出常用的部分如下：
 
 操作|实例|结果|说明
 ---|---|---|---
