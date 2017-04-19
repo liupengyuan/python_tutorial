@@ -1,4 +1,4 @@
-7. 主任务：根据字符串，打印对应回文字符图形。
+7. 主任务：根据字符串，打印对应回文字符。
  
 7.1 任务简介与分析  
 任务是由用户输入一个字符串，比如'赏花归去马如飞'，程序会打出：  
@@ -116,7 +116,7 @@ for i in range(1, len(line)*2+1):
 ```python
 # 示例代码 6
 
-line = '天天天天天天'
+line = '天'*6
 for i in range(1, len(line)*2+1):
     print((len(line)*2-i)*' ' + line[0]*i, end='')
     print()
@@ -284,7 +284,7 @@ print(numbers)
 ```python
 # 示例代码 14
 
-numbers = [10, 20, 30]
+numbers = ['102', 20]
 x, y = numbers
 print(x)
 print(y)
