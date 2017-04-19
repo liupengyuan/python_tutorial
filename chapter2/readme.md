@@ -1,1 +1,1 @@
-# 第二章 函数、字符串、序列、dict/set/Counter（单文件字频/词频统计）、异常、文件 
+# 第二章 函数、序列（str, list, tuple）、for循环、dict/set/defaultdict/Counter（单文件字频/词频统计）、文件
