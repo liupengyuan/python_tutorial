@@ -284,7 +284,7 @@ print(numbers)
 ```python
 # 示例代码 14
 
-numbers = [10, 20, 30]
+numbers = ['102', 20]
 x, y = numbers
 print(x)
 print(y)
