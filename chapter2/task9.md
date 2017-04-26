@@ -1,0 +1,1223 @@
+核心任务：统计一个文本文件的词表与词频
+ 
+9.1 任务简介与分析
+
+- 任务简介  
+给定一个文本文件，统计文件中出现的所有词的频次，对中文，假设中文已经分词并进行了词性标注。
+- 分析  
+任务并不复杂，有多种方法可以解决，比如可以得到文件内文本的词表，然后遍历这个词表，得到每个词在文件文本中的频次。  
+单个文本一般不会太大，但也经常有几G的单个文本文件，因此效率问题仍然很重要。
+
+9.1 抽取指定行文本作为实验语料
+
+请读者下载文本文件：`http://pan.baidu.com/s/1c1RukqW 密码: 3c32`，并将文件解压，保存到目录:`d:\temp\`下，文件名为：`语料.txt`。解压时间较长，请耐心等待（好在只解压一次）。   
+可用文本编辑器打开`语料.txt`来查看文件内数据格式，但是打开这个10G文本文件比较慢。我们可以进入到powershell下，键入：`Get-Content d:\temp\语料.txt -totalcount 10`，来查看文件的前10行。  
+对单个文本文件，如果比较大(如10G bytes)，则可以考虑先取这个文件的前n(如n=5000)行另存为一个小文件，对这个小文件来进行统计，如果没有问题了，再对这个较大的文件进行处理。  
+当然，在大多数时候，我们面临的统计任务可能会是很多文件，可能会是较大规模的语料(几十G或者更多)，则也最好不要直接对其进行编程操作，而是拷贝几个相同格式的语料到一个临时目录，对这个目录进行统计实验，这样不但执行起来快捷，而且如果程序有错误，也容易查找。  
+
+```python
+#coding: utf-8
+#示例程序9-1
+
+with open(r'd:\temp\test.txt', 'w') as fw, open(r'd:\temp\语料.txt') as fr:
+    line_number = 0
+    for line in fr:
+        if line_number < 5000:
+            fw.write(line)
+            line_number += 1
+        else:
+            break
+```
+
+示例程序9-1中：
+
+- 语句`for line in fr:`是从`fr`文件对象中读取一行，`fr`是用`open()`函数打开的文件对象，可用for语句来依次访问其每一行。  
+这样，抽取`语料.txt`的前5000行，保存到`test.txt`文件中，作为测试文件，我们先对这个小测试文件(约1M bytes)即可。
+
+9.2 词频统计
+
+首先取测试语料中的一行文本：`非京/ns 籍/ng 购房/n 须/d 连缴/v 5/m 年/m 以上/f 社保/j 对/p 住房/n 公积金/n 缴存/v 年限/n 并/c 无/v 要求/v`，整个文件可以视为一个大字符串，每行都类似这行的形式，分成行很多是因为有换行符`\n`的存在，我们要将其中每个词汇去掉词性标记(`/ns`等)，然后放到词表中，注意词表中的词不重复，于是可得到整个文件的词表。
+
+```python
+#coding: utf-8
+#示例程序9-2
+
+def get_word_table(filename):
+    '''
+    给定文本文件，统计其词表
+    '''
+    word_table = []
+    with open(filename) as f:
+        text = f.read()
+    words = [word.split('/')[0] for word in text.split()]
+    for word in words:
+        if word not in word_table:
+            word_table.append(word)
+    return word_table
+
+#测试用
+
+filename = r'd:\temp\test.txt'
+table = get_word_table(filename)
+print(table[:100])
+```
+
+示例程序9-2中：
+- `get_word_table(filename)`函数与第8节中的字表统计函数的方法类似，参数`filename`是要统计词频的文件。  
+得到`test.txt`文件的词表以后，我们统计词频。
+
+```python
+#coding: utf-8
+#示例程序9-3
+
+def count_words_freq(filename, words):
+    word_freq_pairs = []
+    with open(filename) as f:
+        text = f.read()
+    for word in words:
+        number = text.count(word)
+        word_freq_pairs.append([word, number])
+    return word_freq_pairs
+
+words_freq = count_words_freq(filename, table)
+
+#测试用print
+print(words_freq[:100])
+```
+
+示例程序9-3中：
+- `count_words_freq(filename, words)`函数有两个参数，分别是要统计的文本文件`filename`及词表`words`。
+- `count()`是统计字符串频次的方法，基本用法为：`字符串.count(str)`，参数也是字符串，功能是在字符串对象中统计参数字符串出现的频次，返回一个整型数。  
+我们应该会觉得，目前得到词表和统计词频需要打开两次同一个文件，并遍历两次，这个似乎可以改进，我们可以只打开一次文件，并仅遍历一次就同时得到词表与词频。
+
+（图）
+
+```python
+#coding: utf-8
+#示例程序9-4
+
+def count_words_freq(filename):
+    '''
+    给定文本文件，建立词表并同时统计词频
+    '''
+    word_freq_pairs = []
+    
+    with open(filename) as f:
+        text = f.read()
+        
+    words = [word.split('/')[0] for word in text.split()]
+    for word in words:
+        for item in word_freq_pairs:
+            if word == item[0]:
+                item[1] += 1
+                break
+        else:
+            word_freq_pairs.append([word, 1])
+            
+    return word_freq_pairs
+
+#测试用
+
+filename = r'd:\temp\test.txt'
+table = count_words_freq(filename)
+print(table[:100])
+```
+
+(画图说明)  
+
+示例程序9-4中：
+
+- `word_freq_pairs`是二维列表，初始为空。其中每一个元素也是列表，存放[词，词频]。
+- 通过一个列表解析，得到`words`，存放`filename`文件中所有去掉词性标记后的词汇。
+- 在`for word in words:`循环中,对每一个在`words`中的词汇，如果与`word_freq_pairs`中某一个`item`相同，则对应的`item`的频次加一，如果不在，则在`word_freq_pairs`中增加一个`item`，其初始频次为1。其中，`for...else`的用法与`while...else`的用法类似。
+- 测试中，打印前100个词-词频进行显示。
+
+好，程序既然相同格式的小文件`test.txt`已经取得成功，我们就在真正的目标文件上试一下吧！请读者自行将示例程序9-4中的`filename`赋值为`r'd:\temp\语料.txt'`，然后运行程序。
+
+不出意外的话，会出现类似`MemoryError`这样的错误。原因何在呢？一般来说，当前(2017年4月)，个人电脑的内存标准配置为8G bytes，而我们要统计的文本文件`语料.txt`大小为10G，利用`read()`方法读入的时候，必然回导致内存不足。  
+幸运的是，python提供了优雅的解决办法，特别是对文本文件，这就是我们已经使用过的 `for xxx in file:`，可按行读入，避免一次性读入导致的内存溢出。
+
+```python
+#coding: utf-8
+#示例程序9-5
+
+def count_words_freq(filename):
+    '''
+    给定文本文件，建立词表并同时统计词频
+    '''
+    word_freq_pairs = []
+    
+    with open(filename) as f:
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for word in words:
+                for item in word_freq_pairs:
+                    if word == item[0]:
+                        item[1] += 1
+                        break
+                else:
+                    word_freq_pairs.append([word, 1])
+                    
+    return word_freq_pairs
+
+#测试用
+
+filename = r'd:\temp\test.txt'
+table = count_words_freq(filename)
+print(table[:100])
+```
+
+示例程序9-5中：
+
+- 我们仍然用`test.txt`作为测试实验。
+- `for line in f:`中，将每次从`f`中，也就是`filename`中读入一行赋值给`line`。
+- 其余部分与示例程序9-4基本相同。
+
+好，拿目标文本文件来跑一下。请读者自行将示例程序9-5中的`filename`赋值为`r'd:\temp\语料.txt'`，然后运行示例程序9-5。  
+不用怀疑是否运行了这个程序，其实，考验每个人耐性的时候到了。  
+当我们愉快的看会儿新闻/视频/小说等再切回来的时候，发现还在持续计算中。好吧，大家不用再等待了，因为可能等到明天还是一样。  
+到底出了什么问题呢？在正式统计以前，我们已经抽取了同格式的测试语料，并顺利统计了词频。就整个程序过程来看，也不应该是死循环。原因何在？  
+我们将在示例程序9-5中加入一些语句，中间每运行一段就输出运行时间以及行号。
+
+```python
+#coding: utf-8
+#示例程序9-6
+import time
+
+def count_words_freq(filename):
+    '''
+    给定文本文件，建立词表并同时统计词频
+    '''
+    word_freq_pairs = []
+    linenum = 0 #当前处理行数
+    total_line_number = 0
+    
+    with open(filename) as f:
+        for line in f:
+            total_line_number += 1
+        print('总行数为：', total_line_number)
+        
+        f.seek(0)   #重新回到文件起始位置(即0位置)
+        start_time = time.time()
+        
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for word in words:
+                for item in word_freq_pairs:
+                    if word == item[0]:
+                        item[1] += 1
+                        break
+                else:
+                    word_freq_pairs.append([word, 1])
+                    
+            if linenum % 1000 == 0:
+                end_time = time.time()
+                print('...当前已经处理到第{}行...已经处理了{:.2f}秒...'.format(linenum, end_time - start_time))
+                
+            linenum += 1
+                    
+    return word_freq_pairs
+
+#测试用
+
+filename = r'd:\temp\语料.txt'
+table = count_words_freq(filename)
+print(table[:100])
+```
+
+示例程序9-6中：
+
+- `time`模块是python标准库中的一个专门提供时间相关函数的模块。
+- `time()`函数能够把当前时间转化为秒，返回浮点数。
+- 首先遍历整个文件，得到文件总行数`total_line_number`。
+- `f.seek(int)`方法能够回到文件对象`f`的指定字节位置，如果参数是`0`，则回到文件的起始位置。这里回到文件起始位置的原因是，在前面遍历整个文件得到文件总行数以后，`f`已经指向了文件的末尾，后面再进行读取时，如果不关闭后重新打开，就需要利用`seek()`调整`f`重新指向文件起始位置。
+
+将任意两个语句运行时间点的时间相减，就会得到两个语句间运行了多长时间，这里以每统计1000行作为一个时间点。  
+根据统计前10000行的输出结果，从9000行到10000行之间的这1000行需要的统计时间约为25秒（intel i5-5200U，主频2.2G，内存8G，win10下），我们以这个时间为标准来估算统计完整个`语料.txt`可能需要多少时间。文件总行数为43938000行，则总时间为：43938000/1000*25/3600 = 305.125小时。
+也就是说，理想情况下(实际上时间会更长，因为随着统计文本的增加，词表的长度会更长)，快到2周才可以得到统计结果。  
+2周太久，只争朝夕，我们希望能尽量减少这个统计时间，因此让我们一起分析下建立词表的方法，看看是否可以改进、加速。示例程序9-6中的这段：
+
+```python
+# 示例程序9-7
+for line in f:
+    words = [word.split('/')[0] for word in line.split()]
+    for word in words:
+        for item in word_freq_pairs:
+            if word == item[0]:
+                item[1] += 1
+                break
+        else:
+            word_freq_pairs.append([word, 1])
+
+```
+
+示例程序9-7中：
+
+- `line`是文件中所有的行，因此最终`word`会遍历到文本内所有的词，总次数随统计文本大小的不同而变化，我们将其设为m。
+- `word_freq_pairs`是词-词频对列表，初始为空，最终将为文本内所有不同的词-词频，我们将最终其大小设为n。
+- 程序多重循环的核心语句就是将要进行`word == item[0]`的判断字符串是否相同(字符串比较运算的耗时远大于整数加一运算的耗时，因此这里只关注本段程序中最耗时的语句)。
+
+我们同时考虑原始示例程序9-3中，得到词表后，利用词表进行词频统计的函数：
+
+```python
+# 示例程序9-8
+
+def count_words_freq(filename, words):
+    word_freq_pairs = []
+    with open(filename) as f:
+        text = f.read()
+    for word in words:
+        number = text.count(word)
+        word_freq_pairs.append([word, number])
+    return word_freq_pairs
+```
+
+示例程序9-8中：
+
+- `words`是词表总大小，应与示例程序9-7中的词-词频对列表大小相同，设为n。
+- `text`是文本大小，假设其长度为k(如果m为文本中的单词书，则k正比于m)
+- 整个程序是要对词表中所有n个词，来进行`text.count(word)`，也就是放到长度为k的字符串中，寻找每一个`word`出现的次数。这个比较，平均每次比较的次数，一般将大于m次(具体可参考字符串匹配的BF算法及KMP算法)。
+- 因此，最后整个程序，将需要进行判断字符串是否相同m*n次(近似次数)
+
+对示例程序9-7与9-8，程序/算法的核心都是对每一个`word`，我们都要遍历一个`table`，比较其中的词与当前的`word`是否相同，相同就是找到，否则就是没有找到。这种查找方法称为**顺序查找**，或**顺序查找算法**。  
+
+（图）
+
+对算法4-7，假设`table`中词汇是均匀分布的，则对每一个查询词，平均只要遍历到`table`的一半。这样对一个词汇进行查找所需的比较次数就约为：`n/2`。 可见，算法执行实际比较(运算)次数与表的大小n直接相关，是n的函数，称为算法的**时间复杂度**。同时，称n为**问题规模**。  
+对问题规模为n的词表，对长度为m个单词的文本，统计词频需要重复`n/2*m`的比较。虽然算法4-8需要重复约`m*n`次比较，但两者在时间复杂度上，是同一个量级的，同阶的，可用`O(m*n)`表示这个量级或阶。有关算法及时间复杂度，请参考《数据结构》或《算法》等相关课程。  
+
+（时间复杂度图）
+
+我们必须设法降低统计词频算法的时间复杂度。  
+考虑查找算法，该算法找一个单词必须遍历单词列表，但在猜数游戏中，我们找到一个数，并没有从头遍历，而是采用了每次折半的方式，很快就找到了目标数字，这就是二分查找或折半查找算法。  
+如果我们利用二分查找，那岂不是将`O(m*n)`的时间复杂度，降低到`m*log2(n)`(请读者自行大致估算，忽略常数项系数)了？仅看这个式子，大家也许没有感觉。假设n=200000(一般词表大小)，则log2(n)=17.6096...，这是什么概念？这意味着，假设我们利用二分查找，成功的进行词频统计，进行粗略估算，则该算法平均查找次数为200000/17.6=11363.6...，比200000/2=100000性能提高了5000多倍！  
+在实现二分查找之前，我们需要进行一些知识铺垫。
+
+9.3 递归
+
+n的阶乘可以定义为：n！= 1X2X3...n，我们据此写出了求n!的函数。  
+与此同时，n的阶乘也可以这样定义：n!=n*(n-1)!且0！=1。根据这样的定义，可以写出求n!函数如下：
+
+```python
+# 示例程序9-9
+
+def recusive_factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n*recusive_factorial(n-1)
+```
+
+在示例程序9-9中：
+
+- 程序两个分支恰是n的阶乘定义(第二个定义)
+- 函数`recusive_factorial()`自己调用了自己。
+- 函数自己直接/间接调用自己的方法/技巧，称为**递归**。这种函数也称为递归函数。
+我们可以模仿求n阶乘的递归方法，递归求`1+2+3+...n`。首先写出便于递归的公式：recusive_sum(n) = n + recusive_sum(n-1)，recusive_sum(0) = 0。
+
+```python
+# 示例程序9-8
+
+def recusive_sum(n):
+    if n == 0:
+        return 0
+    else:
+        return n + recusive_sum(n-1)
+```
+
+对这类可以写出递归形式公式的，均可以直接用递归函数求解。再比如斐波那契数列：1,1,2,3,5,8,13,21....，求其第n项。  
+首先将其写成递归形式的公式：  
+
+fibonacci(n) = fibonacci(n-1) + fibonacci(n-2)  
+fibonacci(0) = 1  
+fibonacci(1) = 1  
+然后写出递归函数：
+
+```python
+# 示例程序9-9
+
+def fibonacci(n):
+    if n <= 2:
+        return 1
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+```
+
+递归程序也可以转化成非递归程序(循环)，利用循环求和及求阶乘的代码，之前的几节中已经讲述，这里就利用循环来求斐波那契数列第n项。  
+由于递归程序在最后需要return前两个函数值，因此需要两个变量来保存这两个函数值。
+
+```python
+# 示例程序9-10
+
+def fibonacci_iter(n):
+    a, b = 1, 1
+    for i in range(n-2):
+        a, b = b, a+b
+    return b
+
+# 测试
+print(fibonacci_iter(10))
+```
+
+示例程序9-10中：
+
+- 利用`a`与`b`来保存数列前两个值，数列初始两个值为`1`和`1`。  
+如果是需要保存前三个值的数列，则可以写成如下：
+
+```python
+# 示例程序9-11
+
+def fibonacci3_iter(n):
+    a, b, c = 1, 1, 1
+    for i in range(n-3):
+        a, b, c = b, c, a+b+c
+    return c
+
+# 测试
+print(fibonacci3_iter(10))
+```
+示例程序9-11中：
+
+- 我们实现了**进阶版**的斐波那契数列：1, 1, 1, 3, 5, 9, 17, 31, 57....
+也就是：  
+fibonacci3(n) = fibonacci3(n-1) + fibonacci3(n-2)  + fibonacci3(n-3)  
+fibonacci(0), fibonacci(1), fibonacci(2) = 1, 1, 1  
+
+
+还有一类问题，解决该问题的过程可以用递归来描述的。  
+最经典的如汉诺塔问题：有三根相邻的柱子，标号为A,B,C，A柱子上从下到上按金字塔状叠放着n个不同大小的圆盘，要把所有盘子一个一个移动到柱子C上，每次只能挪动一个圆盘，并且每次移动同一根柱子上都不能出现大盘子在小盘子上方，请问如何移动？  
+该问题的完整描述可自行网上搜索。
+
+（图）
+
+下面我们从宏观上来分析一下这个问题的实际操作过程：  
+首先**假设存在一种能够完成这个任务的移动办法，称之为hanoi()**，该方法能够对任意n>=1的圆盘进行符合要求的移动，过程是：
+- 当n=1时，从A柱挪动圆盘到C柱只要直接移动即可，可表示为:print(A,'--->',C)
+- 对n>1，即要挪动多个圆盘时，A柱圆盘要挪动到C柱，需要通过辅助柱B来完成。为使A中n个圆盘都挪到C柱，需要：
+  - 将A中n-1个圆盘 **采用办法：hanoi()** 挪到B柱，辅助柱为C；
+  - 将A柱中最后剩下的一个圆盘直接挪到C柱；
+  - 将B柱的n-1个圆盘 **采用办法：hanoi()** 挪到C柱，辅助柱为A；
+
+根据以上递归框架，我们来实现下hanoi方法/函数。
+
+```python
+#coding: utf-8
+# 示例程序9-12
+
+def hanoi(n, A, B, C):
+    if n==1:
+        print(A,'--->',C)
+    else:
+        hanoi(n-1, A, C, B)
+        print(A,'--->',C)
+        hanoi(n-1, B, A, C)
+
+# 以5个盘子做测试
+hanoi(5, 'A', 'B', 'C')
+```
+
+示例程序9-10中：
+
+- `hanoi(n, A, B, C)`函数中各位置参数意义分别为：n个圆盘，原始柱，辅助柱，目标柱。
+- 比较有意思的是，虽然我们开始**假定存在一个`hanoi()`函数，可以解决汉诺塔问题**，但实际上，直到最后一行，这个函数才真正完成。很多不太熟悉汉诺塔递归解法的读者，容易纠结在这里。但如果我们回头看前面实现的斐波那契、阶乘及求和等递归函数，在`fibonacci()`、`recusive_factorial()`及`recusive_sum()`中，其实与汉诺塔函数的实现没有本质的不同：都是假定有一个可以实现某任务的函数，在这个函数内部，函数最终写完以前，就使用了这个假定存在且有效的函数。
+
+9.4 二分查找
+
+我们回到二分查找，先从宏观上对其进行分析，将整个过程用递归框架来描述：  
+
+- 假定存在一个有效的二分查找的方法，名字叫`bi_search()`，能够在正序numbers序列的索引区间[low, high]之间查找number的索引。
+- 如果low>high，说明没有找到，返回-1；
+- 否则，取中点位置mid = (low+high)//2；
+  - 如果number == numbers[mid]，则返回mid，此即为所得索引；
+  - 否则如果 number > numbers[mid]，就 **采用方法：bi_search()** 在[mid+1, high]之间查找number；
+  - 否则，就 **采用方法：bi_search()** 在[low, mid-1]之间查找number。
+
+ 
+(图)
+
+
+```python
+# coding: utf-8
+# 示例程序9-13
+
+def bi_search(number, numbers, low, high):
+    if low > high:
+        return -1
+    else:
+        mid = (low+high)//2
+        if number == numbers[mid]:
+            return mid
+        elif number > numbers[mid]:
+            return bi_search(number, numbers, mid+1, high)
+        else:
+            return bi_search(number, numbers, low, mid-1)
+            
+# 测试用
+nums = [x*x for x in range(10)]
+print(nums)
+print(bi_search(26, nums, 0, 9))
+print(bi_search(9, nums, 0, 9))
+```
+
+在此基础上，能够相对容易地实现二分查找的非递归算法，该算法实现可参考《数据结构》及《算法》等书籍，这里暂不介绍。  
+因为二分查找应用十分广泛，python早已经为我们事先实现。
+
+```python
+# coding: utf-8
+# 示例程序9-14
+
+import bisect
+
+a = [i for i in range(20)]
+print(a)
+print(bisect.bisect_left(a, 5))
+print(a)
+print(bisect.insort_left(a, 5.5))
+print(a)
+```
+
+示例程序9-14中：
+
+- `bisect`是标准库中的二分查找模块，内置有多个方法。
+- `bisect.bisect_left(..., x)`方法接受两个参数，第一个是正序序列，第二个是任意可与序列中元素进行大小比较的对象`x`。该方法会查找`x`在序列中的插入位置，这意味着，在序列中插入`x`以后，序列仍然保持有序。如果`x`大于序列中最大的对象，则返回序列长度，如果`x`小于序列中最小的对象，则返回0。在序列中如果有对象与对象`x`大小相同，返回该对象在序列中的索引。
+- `bisect.insort_left(..., x)`方法接受两个参数，第一个是正序序列，第二个是任意可与序列中元素进行大小比较的对象`x`。该方法会查找`x`在序列中的插入位置，并将其插入，并使序列仍然保持有序。如果`x`大于序列中最大的对象，插入在序列尾部，如果`x`小于序列中最小的对象，则插入在序列首部。在序列中如果有对象与对象`x`大小相同，则插入在该位置对象的左侧。
+- `bisect`模块详细介绍参见：https://docs.python.org/3/library/bisect.html?highlight=bisect#module-bisect
+
+利用`bisect`模块，对词表进行查找，可以使上述统计词频的性能大为提高。  
+二分查找的前提是，初始序列有序，下面让我们考虑下排序算法。
+
+9.5 排序
+
+由于前几个任务中，我们多次进行了求最大值及最小值的实现，这里就介绍基础排序算法中的简单选择排序。  
+给定一个序列，假设序列内的元素可比较大小，欲对其进行简单选择排序(正序)。简单选择排序算法的伪码如下：
+
+```python
+从头(索引i=0)开始遍历序列seq：
+    令最小值的索引为i，即：min=i
+    在区间[i+1, len(seq))，令索引为j，遍历seq：
+        if seq[j] < seq[min]:
+            min = j
+    交换i与min位置的元素，使seq[i]为[i, len(seq))区间的最小值
+```
+
+(图)
+
+根据上述伪码，可实现如下：
+
+```python
+# coding: utf-8
+# 示例程序9-15
+
+# 以seq为数字序列为例
+def sort_simple_selection(seq):
+    for i in range(len(seq)-1):
+        min = i
+        for j in range(i+1, len(seq)):
+            if seq[j] < seq[min]:
+                min = j
+        seq[i], seq[min] = seq[min], seq[i]
+
+numbers = [23,45,12,1,2,333,5,1,222,34,-9]
+sort_simple_selection(numbers)
+print(numbers)
+```
+
+示例程序9-15中：
+
+- `sort_simple_selection(...)`函数的参数是一个列表，在主程序调用该函数时，实参为`numbers`，指向`[23,45,12,1,2,333,5,1,222,34,-9]`，形式参数`seq`也指向这个列表。
+- 在`sort_simple_selection(...)`函数内部将`seq`指向的这个列表排序后，程序返回，此时，变量`number`仍然指向这个列表，而这个列表已经排好了序。
+- 因此，自定义函数中利用可变参数作为参数传递时，函数内部对可变参数的更改，能够反映到该函数外部，如果疏忽，则会得到预期之外的结果。当然，福利就是，提供了无需返回这个可变参数的便利。
+
+（画图）
+
+经过简单分析可得，简单选择排序算法的时间复杂度是O(n*n)，对问题规模n=20万，即对词表为20万的序列进行排序，则需要比较字符串大小20万x20万=400亿次。  
+我们可以利用与二分查找的思路来设计性能更高的排序算法，算法思路是，在待排序序列中，每次选定一个元素p，将其余元素与p依次进行比较，比这个元素小的元素均放到p的左侧，其余元素放到p的右侧。然后，对p的左侧、右侧，再进行同样的算法操作。  
+这，就是快速排序！
+
+（图）
+
+容易想到，快速排序可以利用递归框架来实现，为了便于理解，算法中利用了2个辅助序列(实际算法实现可无额外序列，具体实现就下学期来上我的数据结构课程上听吧)，伪码如下：
+
+```python
+假设有快速排序算法quick_sort(seq)，可以实现快速排序。
+
+令left_seq = [], right_seq = []
+令待排序序列区间的第一个元素为p，即p=seq[0]
+    对seq的[start+1,end]区间中的每一个元素：
+        如果元素 < p:
+            将该元素加入到left_seq中
+        否则：
+            将该元素加入到right_seq中
+            
+    如left_seq非空，利用快速排序算法quick_sort，对left_seq进行快速排序
+    如right_seq非空，利用快速排序算法quick_sort，对right_seq进行快速排序
+    
+    返回：left_seq + p + right_seq
+```
+
+根据上述伪码，可实现如下：
+
+```python
+# coding: utf-8
+# 示例程序9-16
+
+# 以seq为数字序列为例
+def quick_sort(seq):
+    left_seq =  []
+    right_seq = []
+    p=seq[0]
+    for number in seq[1:]:
+        if number <= p:
+            left_seq.append(number)
+        else:
+            right_seq.append(number)
+    if left_seq:
+        left_seq = quick_sort(left_seq)
+    if right_seq:
+        right_seq = quick_sort(right_seq)
+
+    return  left_seq + [p] + right_seq
+
+#测试
+numbers = [23,45,12,1,2,333,5,1,222,34,-9,-9,-9]
+sorted_numbers = quick_sort(numbers)
+print(numbers)
+print(sorted_numbers)
+```
+
+示例程序9-15中：
+
+- 由于`quick_sort(...)`函数内部并没有对参数`seq`进行排序，因此最终要返回排好序的序列，而原有的`seq`也即主程序中的`numbers`保持不变。
+- 快速排序的非递归算法，读者可自行查阅资料实现。
+
+可以证明(详见各类算法及数据结构教程)，快速排序算法的时间复杂度为`O(nlog2(n))`，以n=20万为例进行粗略估算，则性能比简单选择排序算法提升200000/log2(200000)倍，也即10000倍以上！  
+这么强大的且常用的算法，python当然已经为我们实现了，直接内置(内置的是基于快速排序算法的改进版本)！
+
+```python
+# coding: utf-8
+# 示例程序9-17
+
+numbers = [23,45,12,1,2,333,5,1,222,34,-9,-9,-9]
+nums = sorted(numbers)
+print('nums = ', nums)
+print('numbers in sorted(numbers) = ', numbers)
+numbers.sort()
+print('numbers after numbers.sort() = ', numbers)
+```
+
+示例程序9-17中：
+
+- `sort()`是python的list对象的快速排序方法，用法是：`列表.sort()`，可将列表中的元素进行排序(默认为正序)。注意，列表自身进行了排序。
+- `sorted(...)`是python内置的快速排序方法，用法是：`sorted(seq)`，可返回对序列`seq`排序后新生成的一个列表。注意，原有序列不变。
+
+我们回到任务本身，实际上，考虑到词表初始为空列表，空列表自然有序，同时，`bisect.bisect_left()`方法能够直接找到插入位置，因此每次插入新对象后，词表仍然可以保持有序。这也是一种排序算法，即**二分插入排序**，比较符合当前任务需求，缺点是，每次插入元素会导致`O(n)`的元素移动(具体原因请同学们下学期好好上我的数据结构课程^-^)，将在很大程度上影响程序性能，但预期仍然会比原来顺序查找的词频统计方法要快很多。  
+我们利用`bisect`及上述思路重新设计词频统计方法：
+
+```python
+#coding: utf-8
+#示例程序9-18
+import time, bisect
+
+def count_words_freq_bisect(filename):
+    '''
+    给定文本文件，建立词表并同时统计词频
+    '''
+    word_freq_pairs = []
+    linenum = 0 #当前处理行数
+    total_line_number = 0
+    
+    with open(filename) as f:
+        for line in f:
+            total_line_number += 1
+        print('总行数为：', total_line_number)
+        
+        f.seek(0)   #重新回到文件起始位置(即0位置)
+        start_time = time.time()
+        
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for word in words:
+                i = bisect.bisect_left(word_freq_pairs, [word])
+                if i != len(word_freq_pairs) and word_freq_pairs[i][0] == word:
+                    word_freq_pairs[i][1] += 1
+                else:
+                    word_freq_pairs.insert(i, [word,1])
+
+            if linenum % 1000 == 0:
+                end_time = time.time()
+                print('...当前已经处理到第{}行...已经处理了{:.2f}秒...'.format(linenum, end_time - start_time))
+                
+            linenum += 1
+                    
+    return word_freq_pairs
+
+#测试用
+
+filename = r'd:\temp\语料.txt'
+table = count_words_freq_bisect(filename)
+print(table[:100])
+
+```
+
+示例程序9-18中：
+
+- `i = bisect.bisect_left(word_freq_pairs, [word])`是找到文本中的词`word`在词表`word_freq_pairs`中的插入位置，用`[word]`的原因是比较对象的类型需要一致。
+- `i != len(word_freq_pairs) and word_freq_pairs[i][0] == word`，当其为`True`则说明词表中有`word`词汇，且为`i`。
+- `word_freq_pairs[i][1] += 1`，找到词汇位置`i`后，词频加一
+- `word_freq_pairs.insert(i, [word,1])`，没有相同的词汇，则在`i`位置插入词汇以及频次1。
+
+运行上述代码，不难发现，统计词频程序的性能得到了很大提升，几周的运行时间，缩短到天。  
+计算机不分昼夜不知疲劳的运算，人们仍不满足。人们不是心疼计算机的付出，而是需要更快，并非一味的贪心，而是尽量追求完美。  
+
+9.6 散列、set及dict
+
+从`bisect.bisect_left()`函数以及示例程序9-18，我们隐约有所启发，对一个对象为其找到合适的插入位置，同时也能知道是否有相同的对象。如果每一个对象都自带一个位置信息就好了，就像序列中的每一个元素，都有一个索引位置，我们可以直接利用索引位置来找到元素。  
+也就是说，如果每一个对象，都能得到独立的不同地址，将这些对象根据地址存储在一个容器中。对任意欲查询的对象，得到地址，就可以直接在这个容器中查询了。  
+更进一步，对待查找元素集合X，我们需要一个映射f(X)---->Y（下标），使X与Y一一对应，且X在Y上能较为均匀的分布，Y的大小能够控制在与X集合的大小成一定比例。  
+
+（图）
+
+若结构中存在和关键字X相等的记录，则必定在f(X)的存储位置上。由此，不需比较便可直接取得所查记录。称这个对应关系f为散列函数(Hash function)，按这个思想建立的表为散列表或哈希表-Hash_table。这样，查找任意一个元素，并不需要排序，同时，其时间复杂度是O(1)与n无关！！！。以我们任务中的词表n为例，将比二分查找的性能又提升了log2(200000)=16.7倍，是不是很神奇？！！  
+具体哈希的思想在《数据结构》及《算法》教程中有详细讲解，或者访问：https://en.wikipedia.org/wiki/Hash_table  
+
+根据散列/哈希思想，python中内置实现了集合`set`与词典`dict`。首先来看`set`：
+
+```python
+#coding: utf-8
+#示例程序9-19
+
+words = set()  #建立一个空的set
+print('空set：',words)
+basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}   #集合赋值
+print(basket)       # show that duplicates have been removed
+letters = set('aadfijskdfsakdfjlasd')                               #字符串直接给集合赋值
+print(letters)
+
+print('分割-'*50)
+
+print('apple' in basket)                            #判断对象是否在集合中
+print('apple' not in basket)
+
+print('分割-'*50)
+
+letters = {letter.upper() for letter in 'abcde'}    #集合解析/推导
+print(letters)
+letters.add('h')                                    #向集合中加入元素
+print('after add h:'',letters, len(letters))        #len()求集合元素个数
+letters.remove('h')                                 #从集合中移除指定元素
+print('after remove h:'letters)
+letters.clear()                                     #清空集合
+print('after clear():', letters)
+```
+
+示例程序9-19中列出了集合初始化以及各种常用函数与用法。读者需要了解：
+
+- 集合是可变数据类型。
+- 集合内不存在相同的对象，如在建立集合时有相同对象，则只保留一个。
+- 集合是哈希表，判断对象是否在集合中，比判断对象是否在列表/元组中要快很多，因此这类任务，尽量使用集合而不是列表或元组。
+- 集合内的元素，没有固定的顺序，没有下标，因此你不能用类似list一样的数字索引来取得键值对。
+
+有了`set`这个利器，得到词表就异常容易：
+
+```python
+#coding: utf-8
+#示例程序9-20
+
+filename = r'd:\temp\语料.txt'
+word_table = set()
+with open(filename) as f:
+    for line in f:
+        word_table |= {word.split('/')[0] for word in line.split()}
+
+for i, word in enumerate(word_table):
+    print(word)
+    if i==20:       #词表较长，本例仅取20个打印出来作为示例
+        break
+
+```
+
+还是需要一定的耐心，不是所有的事情都能够一蹴而就，立等可取。10G的语料，用个人电脑来统计，是需要一些时间。  
+示例程序9-20中：
+
+- `word_table |= {word.split('/')[0] for word in line.split()}`也就是`word_table = word_table | {word.split('/')[0] for word in line.split()}`，其中`|`可以将两侧的集合合并。
+- `enumerate(...)`函数可将参数转换为`enumberate`类型，该类型可用`for...in`进行迭代，每次返回返回一个整数，以及其参数中的一个元素。参数可以是集合也可以是列表或元组。对集合，则所取得的整数仅用来计数。如果参数是列表或者元组，则每次取得的整数恰是取得元素的索引。
+
+虽然有了set，我们能较快的得到词表，但是对当前的词频统计任务，却难以进一步提升性能，因为其实我们理想中是期望能有可以容纳`词:词频`的一个容器，且每个`词`可以像集合中的对象一样，可以一步定位找到。  
+好吧，这个套路大家想必早已经习惯：我们所期望的，python必已经为我们提供并内置了。这就是词典`dict`。
+
+```python
+#coding: utf-8
+#示例程序9-21
+
+words = {}                      #建立一个空的dict，与words = dict()等价
+print('空dict：',words)
+basket = dict(apple=1, orange=2, pear=3, banana=10)   #词典赋值，键不能有重复
+print(basket)       
+tel = {'jack': 4098, 'sape': 4139}
+print(tel)
+print(tel['jack'])              #词典某个具体键的值
+
+print('分割-'*10)
+
+
+print('apple' in basket)                            #判断某个键是否在词典中
+print('apple' not in basket)
+
+print('分割-'*10)
+
+tel = dict([('sape', 4139), ('guido', 4127), ('jack', 4098)]) #利用列表生成词典
+print(tel)
+letters = {letter:10 for letter in 'abcde'}         #词典解析/推导
+print(letters, len(letters))                        #len()求词典内键值对的个数
+tel['guido'] = 4127                                 #词典中加入键:值对
+print('after insert a key and value into tel:', tel)    
+del tel['jack']                                     #删除词典的键。注意值也随之删除
+print('after del a key from tel:', tel)
+letters.clear()                                     #清空词典
+print('after clear():', letters)
+
+tel['test']                                         #对没有的键试图得到其value，则会给出`KeyError`异常
+```
+
+示例程序9-21中：
+
+- `dict`是词典类型，内部存储0，1或多个键值对，也称为key value pairs，表示为`key:value`或`键:值`，`dict`采用哈希的方式利用键进行索引，因此查询键速度很快，与集合相当。
+- `dict`是可变数据类型。
+- `dict`中的键值对也是没有固定顺序的，没有下标，因此你不能用类似list一样的数字索引来取得键值对。
+- `dict`中的键不能重复，值没有要求。
+- `dict`中，键key必须是不可变数据类型(因此list不能作为键)，值value没有这个要求。
+
+再看一下`dict`的遍历：
+
+```python
+#coding: utf-8
+#示例程序9-22
+
+letters = {letter:10 for letter in '人生苦短我用python'}
+
+for key in letters:             #对dict直接遍历，就是对key进行遍历
+    print(key)
+
+for key in letters.keys():          #得到dict_keys类型对象，可称为键视图
+    print(key)
+
+for value in letters.values():  #得到dict_values类型对象，可称为值视图，可对其遍历得到各个value。
+    print(value)
+    
+for key, value in letters.items():  #得到dict_items类型对象，可称为键值对视图，可对其进行遍历同时得到键与值
+    print(key, value)
+
+```
+
+将`dict`视图转换为`list`类型：
+
+```python
+#coding: utf-8
+#示例程序9-23
+
+letters = {letter:10 for letter in '人生苦短我用python'}
+
+values = liset(letters.values())
+    print(values)
+    
+items = list(letters.items())
+    print(items)
+    
+print(list(letters.keys())) 
+```
+
+有了以上知识，我们编写利用dict进行词频统计的程序。
+
+```python
+#coding: utf-8
+#示例程序9-24
+
+def count_words_freq_dict(filename):
+    words_freq_dict = {}
+    
+    with open(filename) as f:
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for word in words:
+                if word in words_freq_dict: #如果词典中有键为word，则该word的value+1
+                    words_freq_dict[word] += 1
+                else:                       #否则，词典中加入键word，其value为1
+                    words_freq_dict[word] = 1
+                    
+    return words_freq_dict
+
+#测试用
+
+filename = r'd:\temp\语料.txt'
+table = count_words_freq_dict(filename)
+
+for i, item in enumerate(table):
+    print(item, table[item])
+    if i==20:
+        break
+```
+
+
+以上代码的性能已经足够，但是我们很多时候其实希望得到一个按照value逆序或者正序排列的key:value(也即词-词频)结果。  
+如何利用sort()/sorted()对value进行排序，请结合本任务后续第9.8小节的相关知识点自行完成。  
+此外，`count_words_freq_dict()`函数部分还可以精简。
+
+
+9.7 collections
+
+`collections`是python标准库中的容器类型(Container datatypes)，可以视为内置的`dict`,`set`,`list`,`tuple`等的特殊形式。
+下面首先用collections中的`defaultdict`类型将`count_words_freq_dict()`函数简化：
+
+```python
+#coding: utf-8
+#示例程序9-25
+
+from collections import defaultdict
+
+def count_words_freq_dict(filename):
+    words_freq_dict = defaultdict(int)
+    
+    with open(filename) as f:
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for word in words:
+                words_freq_dict[word] += 1    
+    return words_freq_dict
+
+```
+
+示例程序9-25中：
+
+- 首先从`collections`模块中引入了`defaultdict`类型
+- `defaultdict(int)`是建立了一个`defaultdict`类型的对象，该对象类似`dict`，但对没有在`defaultdict`中的键key，设缺省值为整型数0。
+- `words_freq_dict[word] += 1`，如遇到原先不在`words_freq_dict`中的`word`，由于缺省值为0，再自增加1后，为1次。
+
+我们还可以继续精简代码：
+
+```python
+#coding: utf-8
+#示例程序9-26
+
+from collections import Counter
+
+def count_words_freq_dict(filename):
+    words_freq_dict = Counter()
+    
+    with open(filename) as f:
+        for line in f:
+            words_freq_dict += Counter([word.split('/')[0] for word in line.split()])
+    return words_freq_dict
+```
+
+示例程序9-26中：
+
+- 首先从`collections`模块中引入了`Counter`类型
+- `words_freq_dict = Counter()`是建立了一个空的Counter对象，Counter类型类似于`dict`，也可以视为一种特殊的`dict`。
+- `Counter([word.split('/')[0] for word in line.split()])`，实际上是将一个`list`转为`Counter`类型，转换过程中，`Counter()`会自动统计`list`中的对象频次，并以键值对的形式存入`Counter`对象，且与`dict`类似，这个`Counter`对象的`key`是可哈希的，即可利用哈希函数存取，时间复杂度为O(1)。
+- `Counter`对象支持加法操作，其结果就是新的`Counter`对象中相同键的值相加，同时保留各自不同的键值对。
+
+好吧，我们将词频统计的代码精简到了7行，且效率很高，这就是python语言的威力。  
+在本节任务中，我们利用词频统计任务，将程序的效率逐步提升，与此同时，所用数据类型逐步复杂，代码量逐步减少。  
+之所以这样安排而不是直接给出最优答案确实是期望在这个过程中，读者能对各种相关数据类型和算法有更清醒的认识和理解，也能够进一步锻炼使用python进行编程的能力。    
+通过1-9这几个任务，我们已经基本介绍并掌握了python语言的常用基本语法，并已对python编程有一定的实践能力。  
+我们清楚的感觉到，python通过内置或者标准库，已经实现了很多非常有用的类型或者功能，从现在开始，我们将直接利用python、标准库以及各种外部库来进行编程。  
+同时，恭喜读者，你已经掌握了python语言基础，且已经具有基本的编程能力。接下来读者可以自行探索与实践。我们也可以继续一同步入python的进阶与应用。
+
+9.8 辅助任务
+
+- 任务1：回文字符串的判定
+在task 7中，我们根据一个字符串实现了一个回文塔。现在的任务是，给定一个序列，判断其是否是回文序列。这个任务比较简单，有多种解法，我们先练习下递归解法：
+
+```python
+#coding: utf-8
+#示例程序9-27
+
+def palindrome(seq):
+    if len(seq) in [0, 1]:
+        return True
+    else:
+        if seq[0] != seq[-1]:
+            return False
+        return palindrome(seq[1:-1])
+        
+seq = 'abcdedcba'
+print(palindrome(seq))
+```
+
+上述代码可以简化如下：
+
+```python
+#coding: utf-8
+#示例程序9-28
+
+def palindrome(seq):
+    if len(seq) in [0, 1]:
+        return True
+    else:
+        return False if seq[0] != seq[-1] else palindrome(seq[1:-1])
+        
+seq = 'abcdedcba'
+print(palindrome(seq))
+```
+
+示例程序9-28中：
+
+- `False if seq[0] != seq[-1] else palindrome(seq[1:-1])`是**三元表达式**，一般形式为：值1 if 条件 else 值2。当条件为真，表达式的值为值1，否则表达式的值为值2。也可以直接用在赋值语句中如：`x = 5 if len('python')<10 else 10`。
+
+利用三元表达式，上述代码还可以进一步简化：
+
+```python
+#coding: utf-8
+#示例程序9-29
+
+def palindrome(seq):
+    return True if len(seq) in [0, 1] else False if seq[0] != seq[-1] else palindrome(seq[1:-1])
+        
+seq = 'abcdedcba'
+print(palindrome(seq))
+```
+
+好吧，递归函数主体只剩下了一行代码，虽然代码精简有卖点，但是并不建议总这样做，有时候会影响程序可读性。
+再考虑下非递归的解法：
+
+```python
+#coding: utf-8
+#示例程序9-30
+
+def palindrome(seq):
+    for i in range(len(seq)//2):
+        if seq[i] != seq[len(seq)-i-1]:
+            return False
+            break
+    return True
+        
+seq = 'abcdedcba'
+print(palindrome(seq))
+```
+
+如果善用切片，还可以这样：
+
+```python
+#coding: utf-8
+#示例程序9-31
+
+def palindrome(seq):
+    return seq == seq[::-1]
+        
+seq = 'abcdedcba'
+print(palindrome(seq))
+```
+
+- 任务2：字频的统计
+
+完全可以利用与词表词频类似的方法来统计一个文本文件的字表字频，但是我们现在已经得到了词频统计的结果，如果可以在这个基础上直接得到字表字频，统计时间就会大大缩短。
+
+```python
+#coding: utf-8
+#示例程序9-32
+
+from collections import Counter
+
+#假设之前已经词频统计完成，并已放入Counter或dict对象word_table中
+
+ch_table = Counter()
+for word, freq in word_table.items():
+    for ch in word:
+        ch_table += Counter({ch:freq})
+
+for ch, freq in ch_table.items():
+    print(ch, freq, sep=':', end='|')
+
+```
+
+示例程序9-32中：
+
+- `Counter({ch:freq})`是利用一个词典来初始化一个Counter对象。
+
+9.9 拓展与汇总
+
+- bisect模块
+主要有六个方法：
+
+`bisect.bisect_left(a, x, lo=0, hi=len(a))`。
+
+Locate the insertion point for x in a to maintain sorted order. The parameters lo and hi may be used to specify a subset of the list which should be considered; by default the entire list is used. If x is already present in a, the insertion point will be before (to the left of) any existing entries. The return value is suitable for use as the first parameter to list.insert() assuming that a is already sorted.   
+The returned insertion point i partitions the array a into two halves so that all(val < x for val in a[lo:i]) for the left side and all(val >= x for val in a[i:hi]) for the right side.
+
+`bisect.bisect_right(a, x, lo=0, hi=len(a))`，`bisect.bisect(a, x, lo=0, hi=len(a))`。
+
+Similar to bisect_left(), but returns an insertion point which comes after (to the right of) any existing entries of x in a.  
+The returned insertion point i partitions the array a into two halves so that all(val <= x for val in a[lo:i]) for the left side and all(val > x for val in a[i:hi]) for the right side.
+
+`bisect.insort_left(a, x, lo=0, hi=len(a))`。
+
+Insert x in a in sorted order. This is equivalent to a.insert(bisect.bisect_left(a, x, lo, hi), x) assuming that a is already sorted. Keep in mind that the O(log n) search is dominated by the slow O(n) insertion step.
+
+`bisect.insort_right(a, x, lo=0, hi=len(a))`，`bisect.insort(a, x, lo=0, hi=len(a))`。
+
+Similar to insort_left(), but inserting x in a after any existing entries of x.
+
+详细用法见：https://docs.python.org/3/library/bisect.html
+
+- 集合的基本运算
+
+令A = {1,2,3,4,5}，B = {6,7,8,9,1}，D = {'1','2','3','4','5'}，D = {'6','7','8','9','1'}。则有：
+
+函数或操作|示例|结果|说明
+----|---|---|---
+`union(*others)`|`A.union(B, C)`|`{1,2,3,4,5,6,7,8,9,'1','2','3','4','5'}`|求并集
+`set \| other\| ...`| `A\|B\|C` |同上|求并集
+`intersection(*others)`|`A.intersection(B, C, D)`|`{1,'1'}`|求交集
+`set & other &...`|`A & B & C & D`|同上|求交集
+`difference(*others)`|`A.difference(B)`|`{2,3,4,5}`|求差集
+`set - other -...`|`A - B`|同上|求差集
+`symmetric_difference(other)`|`A.symmetric_difference(B)`|`{2,3,4,5,6,7,8,9}`|A\|B - A&B
+`set - other -...`|`A ^ B`|同上|A\|B - A&B
+
+更多操作以及不可变集合`frozenset`等，见：https://docs.python.org/3/library/stdtypes.html?set#set-types-set-frozenset
+
+- sort()与sorted()
+
+两者用法、相同与不同主要如下：
+
+. . . |sort()|sorted
+---|---|---
+用法|`sort(*, key=None, reverse=None)`|`sorted(*, key=None, reverse=None)`
+相同1|内置，快速排序，针对列表|内置，快速排序，针对列表
+不同1|就地排序，原列表改变|返回排序后的新列表，原列表不变
+不同2|2个关键字参数(可选)|1个序列参数(必选)，2个关键字参数(可选)
+相同2|关键字参数用法相同，任一关键字参数，须加上关键字才能使用|关键字参数用法相同，任一关键字参数，须加上关键字才能使用
+不同3|仅针对列表|可用于任何可迭代对象
+
+基本用法示例：
+
+```python
+#coding: utf-8
+#示例程序9-33
+
+a = [5,6,3,2,1,90]
+print(sorted(a))
+print('after sorted, a is still old a:', a)
+a.sort()
+print('after sort, a is not old a:', a)
+
+print(sorted({1: 'D', 2: 'B', 3: 'B', 4: 'E', 5: 'A'}))     # 直接对dict进行sort，将仅单独作用于key
+
+a.sort(reverse=True)
+print('reverse a:', a)
+
+```
+
+`sort()`及`sorted()`中的`key`参数指定一个可返回排序关键字的函数，该函数作用于待排序对象中的每一个元素，`sort()`及`sorted()`根据排序关键字进行排序。
+
+
+```python
+#coding: utf-8
+#示例程序9-34
+
+a = sorted("This is a test string from Andrew".split(), key=str.lower)  #返回每个字符的小写形式，以其为关键字进行排序
+print(a)
+
+student_tuples = [
+        ('john', 'A', 15),
+        ('jane', 'B', 12),
+        ('dave', 'B', 10),
+    ]
+
+from operator import itemgetter
+
+a = sorted(student_tuples, key=itemgetter(2))           # 返回每个对象索引2的元素，以其为关键字对student_tuples排序
+print(a, student_tuples)
+student_tuples.sort(key=itemgetter(2), reverse=True)    # key及reverse参数一起使用
+print(student_tuples)
+
+```
+示例程序9-34中：
+
+- `str.lower()`是一个函数/方法，可接受一个字符串参数，返回字符串的小写形式。如：`str.lower('AB')`，会返回`ab`。`key=str.lower`中，是将指定的函数/方法名称`str.lower`赋值给`key`，以供后续`sorted()`的调用。
+- `from operator import itemgetter`，从`operator`模块中引入`itemgetter`函数，参数代表作用对象中对应索引的元素，后续`sort()`及`sorted()`将以这个元素作为关键字来进行排序。  
+
+有关`key`参数的使用涉及到了函数式编程，相关知识将在后续章节详述。
+
+- Counter模块
+
+键入以下代码，观察执行结果。
+
+```python
+#coding: utf-8
+#示例程序9-34
+#Counter 初始化
+
+c = Counter()                           # a new, empty counter
+print(c)
+c = Counter('gallahad')                 # a new counter from an iterable
+print(c)
+c = Counter({'red': 4, 'blue': 2})      # a new counter from a mapping
+print(c)
+c = Counter(cats=4, dogs=8)             # a new counter from keyword args
+print(c)
+c = Counter(['eggs', 'ham'])
+print(c)
+c['bacon']                              # count of a missing element is zero
+print(c)
+```
+Counter 常用方法：
+
+```python
+#coding: utf-8
+#示例程序9-35
+
+#Counter 方法
+
+c = Counter(a=4, b=2, c=0, d=-2)
+print(sorted(c.elements()))         # Return an iterator over elements repeating each as many times as its count. 
+                                    # Elements are returned in arbitrary order.
+text = 'abracadabra'
+n=3
+Counter(text).most_common(n)        # Return a list of the n most common elements and their counts from the most common to the least.  
+                                    # 相当于根据值value逆序前n个key-value pairs。
+
+c = Counter(a=3, b=1)
+d = Counter(a=1, b=2)
+print(c + d)                       # add two counters together:  c[x] + d[x]
+print(c - d)                       # subtract (keeping only positive counts)
+print(c & d)                       # intersection:  min(c[x], d[x]) 
+print(c | d)                       # union:  max(c[x], d[x])
+```
+
+Counter详细介绍，见：https://docs.python.org/3/library/collections.html?Counter#counter-objects
+
+- 数据类型汇总（以后再写）
+
+9.10 完整代码
+
+```python
+#coding: utf-8
+#示例程序9-36
+
+from collections import Counter
+
+def count_words_freq_dict(filename):
+    words_freq_dict = Counter()
+    
+    with open(filename) as f:
+        for line in f:
+            words_freq_dict += Counter([word.split('/')[0] for word in line.split()])
+    return words_freq_dict
+
+def main():
+    filename = r'd:\temp\语料.txt'
+    table = count_words_freq_dict(filename)
+    print(table.most_common(50))
+
+if __name__ == '__main__':
+    main()
+
+```
+
+9.11 练习
+
+1、随机生成1万个整数，范围在0-10万之间，分别进行简单选择排序、快速排序（自行递归实现的）以及内置sort函数3种排序，打印出3种排序的运行时间。  
+2、随机生成1万个整数，范围在0-10万之间，求其中每个整数出现的次数。并按照整数大小排序输出整数及出现次数。  
+3、对本任务中的`语料.txt`文件，随机抽取其5001-10000行存为`test1.txt`文件，写函数，可得到其与本任务中`test.txt`文件的共用字以及独用字（相关概念自行百度）。  
+4、挑战性任务：统计本任务中的`语料.txt`文件，得到每一个词对应不同词性的频次，可表示为：{词:[('n',1000), ('v', 98)...],...}，即在`dict`对象中，`key`为词，`value`为列表，输出词频最高的50个条目。
