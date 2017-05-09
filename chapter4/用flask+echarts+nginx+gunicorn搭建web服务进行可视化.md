@@ -257,7 +257,7 @@ xx.3 linux系统下搭建python及web服务器nginx
 这个步骤是为了更新软件包源（地址列表），以便后续可以正确下载各类软件包。
 注意在本节的安装设置中多需要```sudo```权限，如需要输入密码，则自行输入。
 3. $ ```wget -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-4.3.1-Linux-x86_64.sh```  
-下载anaconda 3.4版本，这是一个软件镜像站点，国内下载速度较快。如果失败则改用软件原地址下载：
+下载anaconda 3.4版本，这是一个软件镜像站点，国内下载速度较快。如果失败则改用软件原地址下载：  
 $ ```wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh```  
 4. $ ```bash Anaconda3-4.3.1-Linux-x86_64.sh```  
 安装Anaconda，注意文件名要对应自己下载的文件名。
@@ -291,12 +291,14 @@ xx.3 实现可远程访问的可视化web应用
 2. $ ```sudo service nginx start```  
 如未启动`nginx则`启动```nginx```服务。
 3. $ `cd /var/www`
-转到 /var/www目录。
+转到 `/var/www`目录。
 4. $ `mkdir myapp`
-在当前目录下，建立工作目录，名为`myapp`。
-5. $ `vim index.html`
+在当前目录(`/var/www`)下，建立工作目录，名为`myapp`。
+5. $ `cd myapp`
+进入`myapp`工作目录
+6. $ `vim index.html`
 建立并编辑`index.html`文件，内容为中将本章第一节中的示例代码5。或直接示例代码5的`index.html`文件拷贝到这个目录下。
-6. 打开浏览器并输入```127.0.0.1```  
+7. 打开浏览器并输入```127.0.0.1```  
 浏览器将会显示预期中的可视化图表。
 
 xx.4 (异步)数据加载与更新
