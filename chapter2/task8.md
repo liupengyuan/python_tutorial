@@ -15,7 +15,7 @@
 
 8.2 文件读取与写入
 
-请读者到`https://github.com/liupengyuan/liupengyuan.github.io/tree/master/chapter2/data`下载`成语.txt`，并将文件保存到目录:`d:\temp\`下。  
+请读者下载`成语.txt`，链接: http://pan.baidu.com/s/1bpeUF87 密码: wxni,并将文件保存到目录:`d:\temp\`下。  
 首先，用记事本或者其他文本编辑器打开该文件，查看文件内容。
 
 ```python
