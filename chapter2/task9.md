@@ -769,7 +769,7 @@ tel = dict([('sape', 4139), ('guido', 4127), ('jack', 4098)]) #利用列表生�
 print(tel)
 letters = {letter:10 for letter in 'abcde'}         #词典解析/推导
 print(letters, len(letters))                        #len()求词典内键值对的个数
-tel['guido'] = 4127                                 #词典中加入键:值对
+tel['pengyuan'] = 4078                                 #词典中加入键:值对
 print('after insert a key and value into tel:', tel)    
 del tel['jack']                                     #删除词典的键。注意值也随之删除
 print('after del a key from tel:', tel)
