@@ -817,7 +817,7 @@ for key, value in letters.items():  #得到dict_items类型对象，可称为键
 
 letters = {letter:10 for letter in '人生苦短我用python'}
 
-values = liset(letters.values())
+values = list(letters.values())
     print(values)
     
 items = list(letters.items())
