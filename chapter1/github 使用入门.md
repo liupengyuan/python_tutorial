@@ -27,8 +27,7 @@
   - 点击感兴趣的项目如：`iupengyuan.github.io`
   - 点击右上角的`Fork`，可以拷贝该项目到自己的项目中，可以顺便点一下`Star`，为项目加星。这时，就将iupengyuan.github.io克隆到你自己的github仓库中了，且仓库名称为：yourname/iupengyuan.github.io，然后可以对项目进行修改更新，或者上传文件。
   - 如果想将你自己在自己仓库`yourname/iupengyuan.github.io`中的更改合并到原作者的项目仓库`liupengyuan/iupengyuan.github.io`，则需要发起`pull request`请求。
-  -发出PR请求后，需要等待原项目所有者如`liupengyuan`同意`merge`你的更改，你所做的修改才能被合并到原作者项目仓库中。
-
+  - 发出PR请求后，需要等待原项目所有者如`liupengyuan`同意`merge`你的更改，你所做的修改才能被合并到原作者项目仓库中。
  - 得到原项目最新版本（因原作者项目更新并不向你你仓库中所拷贝的该项目进行更新推送）。
    - 打开`fork`到本地的项目如`yourname/iupengyuan.github.io`，如看到看到类似`This branch is xxx commits behind liupengyuan:master.`或`liupengyuan committed on GitHub  Merge pull request #xxx from yyyyyyyyy`的信息，说明原项目有更新。
    - 点击`pull request`，进入`Comparing changes`页面
