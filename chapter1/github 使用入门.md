@@ -19,7 +19,7 @@
   - 点击`Merge pull request`
   - 点击`Confirm merge`
   - 填入描述
-  - 点击`comment`完成项目合并
+  - 点击`commit`完成项目合并
   - 点击`Delete branch`，删除分支。
 - 关注项目与合作。
   - 重新登录或回到github.com首页
@@ -36,6 +36,6 @@
    - 点击`creat new pull request`，在框中输入更新信息
    - 点击`creat pull request`(此时等于是原项目`liupengyuan/iupengyuan.github.io`[`head fork`]向你的仓库`yourname/iupengyuan.github.io`[`base fork`]进行`pull request`请求)。
    - 拉到页面底部，点击`Merge pull request`
-   - 点击`cofirm`，至此，这个项目就得到了原项目的最新版本。
+   - 点击`confirm`，至此，这个项目就得到了原项目的最新版本。
 
 2. 通过git shell使用github（以后再写）
