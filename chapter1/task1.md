@@ -28,6 +28,7 @@
  - 回到powershell程序界面，键入`python test1.py`并回车。
 意思是告诉python，运行`test1.py`这个文件。
 ![](https://liupengyuan.github.io/pic/4.jpg)
+
 程序运行的结果没有出乎我们的预料，在程序文件中有多个指令，则python将这些指令从上到下依次执行。特别的，由于文件已经保存，因此以后还可以重复执行，或者对其加以修改。这种编程方式称之为脚本模式编程。  
 
  1.4 使用jupyter notebook进行编程
