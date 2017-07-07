@@ -1,7 +1,7 @@
-任务：搭建可视化网站：xxx.xxxx.xxx
+# 任务：搭建可视化网站：xxx.xxxx.xxx
 
-xx.1 Echarts入门
-1. Echarts介绍  
+**xx.1 Echarts入门**
+**1. Echarts介绍**  
 ECharts，一个纯 Javascript 的图表库，可以流畅的运行在 PC 和移动设备上，兼容当前绝大部分浏览器（IE8/9/10/11，Chrome，Firefox，Safari等），底层依赖轻量级的 Canvas 类库 ZRender，提供直观，生动，可交互，可高度个性化定制的数据可视化图表。
 ECharts 3 中加入了更多丰富的交互功能以及更多的可视化效果，并且对移动端做了深度的优化。
 
@@ -19,15 +19,17 @@ Echarts官网所列重点特点基本如下：
 - 国人使用较多，这样容易解决使用中出现的各类问题
 - 百度开发，因而echarts开发技术有较高保障，项目也会有较强的延续性
 
-2. 迅速上手使用
-3. 
-2.1 建立工作目录  
+
+**2. 迅速上手使用**
+
+**2.1 建立工作目录**
+
 windows下，在`D:`下建立目录`my_app`，其他环境请类似相应建立目录。
 - 下载echarts至工作目录  
 浏览器中，打开：http://echarts.baidu.com/download.html
 这里先下载完整版`http://echarts.baidu.com/dist/echarts.min.js`，下载到工作目录`D:\my_app`。以后可以视需要选择版本下载。
 
-2.2 建立最基本的`html`文件
+**2.2 建立最基本的`html`文件**
 
 利用记事本或其他文本编辑器，在工作目录`D:\my_app`下，建立文件`first.html`，注意，将文件扩展名`txt`更改为`html`。文件内容如下：
 
@@ -56,7 +58,7 @@ windows下，在`D:`下建立目录`my_app`，其他环境请类似相应建立�
 
 有关`html`的更多内容，可参考：http://www.w3school.com.cn/html/index.asp
 
-2.3 在网页中引入echarts
+**2.3 在网页中引入echarts**
 
 在工作目录`D:\my_app`下，建立文件`index.html`。文件内容如下：
 
@@ -82,7 +84,7 @@ windows下，在`D:`下建立目录`my_app`，其他环境请类似相应建立�
 - `<script src="echarts.min.js"></script>`，这行中的`<script>`标签标示两者之间是脚本语言代码，`src="echarts.min.js"`表示引入`echarts`模块文件。有了它，后面的可视化展示图表才能被调用。比较类似于`python`的`import`模块或包的功能。有关`javascript`的内容，请参考：http://www.w3school.com.cn/javascript/index.asp
 
 
-2.4 图表布置
+**2.4 图表布置**
 
 我们来看下图表布置，也就是对将在`<body>......</body>`中显示的图表进行布置。  
 用文本编辑器打开方才的`index.html`文件，将`body`部分用如下示例代码xx-3替换。
@@ -243,9 +245,9 @@ windows下，在`D:`下建立目录`my_app`，其他环境请类似相应建立�
 更多时候，我们想把这个网页也展示给别人而不仅仅是自己自娱自乐，我们期望未来会有用户以浏览器链接（URL）的方式来远程访问这个网页，然后看到我们想展示的内容。这种需求，比较快捷的方式是利用开源的web后端框架来满足。
 
 
-xx.2 Flask入门
+**xx.2 Flask入门**
 
-1. Flask介绍  
+**1. Flask介绍**  
 Flask是使用Python编写一个微型/轻量级Web开发框架，微型/轻量级意为使用简单的核心，用extension 进行功能扩展，实际应用中Flask搭建的网站也可以处理大规模百万级别的用户。  
 Web开发框架是将Web开发中比较复杂的过程集成封装起来，在Web开发框架上开发Web应用，更有效率。  
 python下Web开发框架最常用的即Flask与Django。这里介绍Flask的原因除了个人偏好外，还在于：
@@ -254,13 +256,14 @@ python下Web开发框架最常用的即Flask与Django。这里介绍Flask的原�
 -  文档齐全
 -  代码简洁且易于扩展
 
-2. 迅速上手使用
 
-2.1 下载安装Flask
+**2. 迅速上手使用**
+
+**2.1 下载安装Flask**
 
 由于Anaconda中自带Flask，因此本步骤可以省略。否则可以进入到`powershell`，在其中运行：`pip install Flask`。这样就装好了Flask。
 
-2.2 第一个Flask应用：Hello, world
+**2.2 第一个Flask应用：Hello, world**
 
 ```python
 #示例代码xx-7
@@ -290,7 +293,7 @@ if __name__ == '__main__':
 
 回到`powershell`，并请按control-C来停止Flask服务。
 
-2.3 扩展
+**2.3 扩展**
 
 ```python
 #示例代码xx-8
@@ -563,11 +566,11 @@ if __name__ == '__main__':
 - ` school_data = data['school']`与`area_data = data['area']`将获取到的数据分别保存到两个变量。
 - `return render_template('index.html', school = school_data, area = area_data)`将两个变量的数据内容传入到示例代码xx-12中的`{{school|tojson}}`及`{{area|tojson}}`对应变量中。
  
-3. 用户交互可视化
+**3. 用户交互可视化**
 
 这次我们想要在web页面中，根据用户的输入，能够有所反应，显示相应可视化效果。这就需要程序能够接受到用户输入的信息，根据该信息，路由到对应的可视化页面，同时利用对应的数据或者计算生成数据对web页面进行渲染。
 
-3.1 第一次用户交互
+**3.1 第一次用户交互**
 
 在`templates`目录下，建立`index.html`文件，内容如下：
 
@@ -621,7 +624,7 @@ if __name__ == "__main__":
 - `@app.route('/result', methods = ['POST'])`中，`/result`绑定了函数`show()`，但是必须加上额外的参数`methods`，且其值与示例代码xx-14中`<form name="input" action="/result" method="POST">`中`method`的值对应一致，才能在` <input type="submit" value="提交">`中点击提交后执行`show()`函数。
 - `request.form['user']`中，`request`对象在程序前部`import`，对于 Web 应用，与客户端发送给服务器的数据交互至关重要。在Flask中由request对象来提供这些信息。其`form`属性将返回一个从POST（和PUT）请求得到的词典（dict）。本例中返回词典的键为`user`，则`request.form['user']`的值即为`user`对应的用户在文本框中输入的文本。
 
-3.2 用户交互可视化实例
+**3.2 用户交互可视化实例**
 
 假设有历时十年的词频统计结果，我们想根据用户输入的词汇，给出该词汇在十年间的折线图。这需要将以上知识整合起来。
 
@@ -779,26 +782,26 @@ if __name__ == "__main__":
 
 windows下可以完全搭建Web服务器，但考虑到目前更多的Web等服务均搭建在linux平台，因此这里将介绍在linux下搭建Web平台，当然首先需要一台linux系统的本地计算机或一个具有`sudo`权限的远程服务器账号。
 
-xx.4 linux最基本操作
+**xx.4 linux最基本操作**
 
-4.1 进入linux系统
+**4.1 进入linux系统**
 - 如果已有`linux`远程服务器，则用`putty`或`Xshell`等工具登陆一个具有sudo权限的账号。
 - 如果没有远程服务器，且本地计算机不是`linux`系统，可安装其任意一个流行的发行版本，这里介绍flask在`ubuntu`下的web服务器安装使用，`ubuntu`请读者自行搜索安装，关键字可为"ubuntu U盘安装"。安装时注意记住用户密码，这个密码也就是日后管理员密码，具有`sudo`权限，你懂的。
 
-4.2 ubuntu等桌面环境
+**4.2 ubuntu等桌面环境**
 Linux下的桌面环境与windows桌面类似，自带浏览器，文件管理器等，操作也与windows平台类似。
 
-4.3 命令行终端
+**4.3 命令行终端**
 快捷键`Ctrl+Alt+t`可打开一个**终端**。终端就是一个`linux`系统用户界面，用户在其中与`linux`系统交互，一般也称为**shell**。在实际使用中，可视实际需要同时打开多个终端进行操作。  
 在`shell`下是用命令行操作的，`shell`的提示符为`$`。  
 本章在介绍`ubuntu`下的一些操作中，如以`$`开头，则表示是在`shell`下操作。注意，`$`只是提示符，操作指令中不要包含`$`。
 
-4.4 最常用命令
+**4.4 最常用命令**
 - `ls` 列出当前目录下的文件
 - `cp filename1 filename2` 拷贝`filename1`文件，且命名为`filename2` 
 - `cd /var/www` 进入根目录下的`var`目录下的`www`目录
 
-4.5 vim最简使用命令
+**4.5 vim最简使用命令**
 vim是linux下最常用的文本编辑器之一。与windows下word等软件最大的不同是，有**命令模式**与**编辑模式**之分，需要提醒的是，并非只有在编辑模式才能对文件进行修改。
 - `vim filename.py` 用`vim`打开（并编辑）`filename.py`文件，如果文件不存在，则自动创建一个空文件。
 - `vim`编辑器存在两种模式：命令模式与编辑模式。按`esc`键，可切换至命令模式，输入`i`，可切换至编辑模式。
@@ -816,9 +819,9 @@ vim是linux下最常用的文本编辑器之一。与windows下word等软件最�
 这里仅介绍本章用到的最基本的`linux`使用，进一步的`linux`使用基础，请参阅附录X，或者自行搜索。
 
 
-xx.5 Linux下搭建python及相关web服务环境
+**xx.5 Linux下搭建python及相关web服务环境**
 
-5.1 Anaconda及python开发包的安装
+**5.1 Anaconda及python开发包的安装**
 1. 登陆linux服务器
 2. $ `sudo apt-get update`
 
@@ -837,7 +840,7 @@ $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 linux环境下编译python扩展应用时一般均需要安装`python-dev`包，主要包含编译时需要的头文件。
 
 ---
-5.1 python多版本环境（conda）
+**5.2 python多版本环境conda**
 
 完全可以直接在当前Anaconda版本下安装各类软件包，但是，最好需要所安装的库与包的版本与当前Anaconda对应的python版本一致，当版本不一致时，就很可能导致安装失败或者运行出错。  
 当然，卸载当前的Anaconda或者python，重新一个与要安装的包/库相同版本的Anaconda或python，然后再安装这个包/库也无不可。但是Anaconda内置的`conda`提供了更好的解决办法，可创建多个Anaconda版本的python环境，并可以根据需要随意切换，互不干扰。
@@ -855,7 +858,7 @@ linux环境下编译python扩展应用时一般均需要安装`python-dev`包，
 退出env34环境（注意，以后利用`source activate env34`即可再次进入该环境，且保留所有安装包等各项设置）
 
 
-5.3 安装配置nginx
+**5.3 安装配置nginx（待续）**
 
 Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。由俄罗斯的程序设计师Igor Sysoev所开发，供俄国大型的入口网站及搜索引擎Rambler（俄文：Рамблер）使用。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。(引自百度百科)
 
@@ -877,13 +880,13 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
 
 
-5.4 搭建gunicorn（待续）
+**5.4 搭建gunicorn（待续）**
 1. $ `pip install gunicorn`
 2. 
 $ `gunicorn -b 127.0.0.1:5000 myapp:app`
 
 
-5.5 启动服务并展示可视化图表（待续）
+**5.5 启动服务并展示可视化图表（待续）**
 1. 登陆到Linux服务器
 2. $ `sudo service nginx restart`
 如未启动`nginx`则启动`nginx`服务。
