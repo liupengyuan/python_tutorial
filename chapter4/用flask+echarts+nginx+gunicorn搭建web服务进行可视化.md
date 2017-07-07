@@ -834,6 +834,7 @@ vim是linux下最常用的文本编辑器之一。与windows下word等软件最�
 
 这个步骤是为了更新软件包源（地址列表），以便后续可以正确下载各类软件包。
 注意在本节的安装设置中多需要`sudo`权限，如需要输入密码，则自行输入。
+
 3. $ `wget -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 
 下载anaconda 3.4版本，这是一个软件镜像站点，国内下载速度较快。如果失败则改用软件原地址下载：  
