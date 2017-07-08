@@ -830,22 +830,15 @@ vim是linux下最常用的文本编辑器之一。与windows下word等软件最�
 **5.1 Anaconda及python开发包的安装**
 
 1. 登陆linux服务器
-2. $ `sudo apt-get update`
 
-这个步骤是为了更新软件包源（地址列表），以便后续可以正确下载各类软件包。
-注意在本节的安装设置中多需要`sudo`权限，如需要输入密码，则自行输入。
-
-3. $ `wget -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
+2. $ `wget -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 
 下载anaconda 3.4版本，这是一个软件镜像站点，国内下载速度较快。如果失败则改用软件原地址下载：  
 $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 
-4. $ `bash Anaconda3-4.3.1-Linux-x86_64.sh`
+3. $ `bash Anaconda3-4.3.1-Linux-x86_64.sh`
 
 安装Anaconda，注意文件名要对应自己下载的文件名。
-5. $ `sudo apt-get install python-dev`
-
-linux环境下编译python扩展应用时一般均需要安装`python-dev`包，主要包含编译时需要的头文件。
 
 ---
 **5.2 python多版本环境conda**
@@ -853,16 +846,13 @@ linux环境下编译python扩展应用时一般均需要安装`python-dev`包，
 完全可以直接在当前Anaconda版本下安装各类软件包，但是，最好需要所安装的库与包的版本与当前Anaconda对应的python版本一致，当版本不一致时，就很可能导致安装失败或者运行出错。  
 当然，卸载当前的Anaconda或者python，重新一个与要安装的包/库相同版本的Anaconda或python，然后再安装这个包/库也无不可。但是Anaconda内置的`conda`提供了更好的解决办法，可创建多个Anaconda版本的python环境，并可以根据需要随意切换，互不干扰。
 
-1. $ `sudo apt-get install python-pip`   
-安装`python-pip`模块，该模块安装以后，可以使用`pip install 软件包`这样的`pip`命令方便安装python各类软件库/包。
-
-2. $ `conda create env34 python=3.4 anaconda`  
+1. $ `conda create env34 python=3.4 anaconda`  
 创建一个python 3.4版本的anaconda，并将其命名为：env34。具体版本读者可以根据需要创建。
 
-3. $ `source activate env34`  
+2. $ `source activate env34`  
 激活刚才创建的`env34`环境。此时，会发现提示符行最前面有`(env34)`。如果确定要在`python3.4`版本下进行各类软件包的安装以及使用，则可在该环境下进行。
 
-4. $ `source deactivate env34`
+3. $ `source deactivate env34`
 退出env34环境（注意，以后利用`source activate env34`即可再次进入该环境，且保留所有安装包等各项设置）
 
 
@@ -871,27 +861,55 @@ linux环境下编译python扩展应用时一般均需要安装`python-dev`包，
 Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。由俄罗斯的程序设计师Igor Sysoev所开发，供俄国大型的入口网站及搜索引擎Rambler（俄文：Рамблер）使用。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。(引自百度百科)
 
 1. 登陆linux服务器
-2. $ `sudo apt-get install nginx`   
+
+2. $ `sudo apt-get update`
+
+这个步骤是为了更新软件包源（地址列表），以便后续可以正确下载各类软件包。
+注意在本节的安装设置中多需要`sudo`权限，如需要输入密码，则自行输入。
+
+3. $ `sudo apt-get install python-dev`
+
+linux环境下编译python扩展应用时一般均需要安装`python-dev`包，主要包含编译时需要的头文件。
+
+4. $ `sudo apt-get install python-pip`
+
+安装`python-pip`模块，该模块安装以后，可以使用`pip install 软件包`这样的`pip`命令方便安装python各类软件库/包。
+
+5. $ `sudo pip install nginx`
+
 安装nginx包。
-3.  $ `sudo service nginx start`  
+
+6.  $ `sudo service nginx start`
+
 启动`nginx`服务。
-4. 打开浏览器并输入`127.0.0.1`(如果是登陆服务器进行开发，则需要打开浏览器，输入服务器的ip地址)    
+
+7. 打开浏览器并输入`127.0.0.1`(如果是登陆服务器进行开发，则需要打开浏览器，输入服务器的ip地址) 
+
 浏览器将会显示nginx的欢迎页面，至此，已经成功的运行了nginx的web服务。
-5. $ `sudo cp /etc/nginx/sites-available/default   /etc/nginx/sites-available/default.bak`  
+
+8. $ `sudo cp /etc/nginx/sites-available/default   /etc/nginx/sites-available/default.bak`
+
 备份nginx的默认配置文件`default`，必要时可以恢复最原始的缺省配置。
-6. $ `sudo vim /etc/nginx/sites-available/default`  
+
+9. $ `sudo vim /etc/nginx/sites-available/default`
+
 利用`vim`文本文件编辑器修改nginx的默认配置文件`default`。可简单配置如下：
 
 
-7. $ `sudo service nginx restart`
+10. $ `sudo service nginx restart`
 
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
 
 
 **5.4 搭建gunicorn（待续）**
+1. 登陆linux服务器
 
-1. $ `pip install gunicorn`
-2. 
+2. $ `sudo apt-get update`
+
+3. $ `sudo apt-get install python-dev`
+
+4. $ `pip install gunicorn`
+5. 
 $ `gunicorn -b 127.0.0.1:5000 myapp:app`
 
 
