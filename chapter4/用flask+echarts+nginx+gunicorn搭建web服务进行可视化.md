@@ -846,7 +846,7 @@ $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 完全可以直接在当前Anaconda版本下安装各类软件包，但是，最好需要所安装的库与包的版本与当前Anaconda对应的python版本一致，当版本不一致时，就很可能导致安装失败或者运行出错。  
 当然，卸载当前的Anaconda或者python，重新一个与要安装的包/库相同版本的Anaconda或python，然后再安装这个包/库也无不可。但是Anaconda内置的`conda`提供了更好的解决办法，可创建多个Anaconda版本的python环境，并可以根据需要随意切换，互不干扰。
 
-1. $ `conda create env34 python=3.4 anaconda`  
+1. $ `conda create -n env34 python=3.4 anaconda`  
 创建一个python 3.4版本的anaconda，并将其命名为：env34。具体版本读者可以根据需要创建。
 
 2. $ `source activate env34`  
