@@ -911,7 +911,7 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 
 3. $ `sudo apt-get install python-dev`
 
-4. source activate env34
+4. $ `source activate env34`
 
 5. (env34)$ `sudo pip install nginx`
 
@@ -925,16 +925,63 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 
 浏览器将会显示nginx的欢迎页面，至此，已经成功的运行了nginx的web服务。
 
-8. $ `sudo cp /etc/nginx/sites-available/default   /etc/nginx/sites-available/default.bak`
+
+
+
+**5.4 flask+nginx+gunicorn联合进行web服务示例**
+
+
+1. 登陆linux服务器
+
+2. $ `source activate env34`
+
+3. 在指定目录如在`/var/www/`下，建立`my_app`目录，然后请自行建立类似**3.2**小节中的目录结构、同名文件以及相同的文件内容（如已经建立，则忽略）。在`my_app`目录下建立文件test_static.html。内容为：
+
+```html
+<html>
+<body> Test for nginx. This is a test page for static web page.</body>
+</html>
+```
+
+4. 转到my_app目录。
+
+5. (env34)$ `gunicorn -w 4 -b 0.0.0.0:8000 word_freq_vis:app`
+
+启动`word_freq_vis程序`对应的函数`app`的gunicorn服务。
+
+6.  (env34)$ `sudo cp /etc/nginx/sites-available/default   /etc/nginx/sites-available/default.bak`
 
 备份nginx的默认配置文件`default`，必要时可以恢复最原始的缺省配置。
 
-9. $ `sudo vim /etc/nginx/sites-available/default`
+7.  (env34)$ `sudo vim /etc/nginx/sites-available/default`
 
-利用`vim`文本文件编辑器修改nginx的默认配置文件`default`。可简单配置如下：
+利用`vim`文本文件编辑器修改nginx的默认配置文件`default`。对本例使用ip进行访问的情况，可简单配置如下：
 
+```python
+server{
+        listen 80;
 
-10. $ `sudo service nginx restart`
+        root /var/www/my_app;
+        index index.html;
+        location / {
+                try_files $uri $uri/ = 404;
+                proxy_pass http://127.0.0.1:8000;   # 须与gunicorn的端口设定对应一致。
+       }
+
+```
+其中：
+- `listen 80;`，将监听端口设为：`80`，也就是一般web浏览默认端口。
+- `root /var/www/my_app;`，将URL访问的根目录设定为：`/var/www/my_app`。
+- `index index.html;`，将访问的默认页面设为：`index.html`。
+- ` try_files $uri $uri/ = 404;`，表示如果找不到页面则返回404错误页面。
+- `proxy_pass http://127.0.0.1:8000;`，设定动态页面访问的服务器地址以及端口，这里面设为当前服务器地址，端口号与`gunicorn`服务的端口一致。
+
+8.  (env34)$ `sudo service nginx restart`
 
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
 
+9. 假设远程web服务器ip地址为：`xxx.xxx.xxx.xxx`，在本地浏览器输入`xxx.xxx.xxx.xxx/test_static.html`并回车，因为是静态页面，所以直接被`nginx`解析访问。在本地浏览器输入`xxx.xxx.xxx.xxx`并回车，则动态可视化页面将被加载执行，这是通过nginx代理到gunicorn提供的web服务。
+
+至此，一个简单的flask+nginx+gunicorn联合进行web服务示例已经完成。
+
+这样的web服务，对访问量日均ip在1000左右的可视化网站，已经足够，对其进一步提高性能与优化，则留待读者慢慢探索。
