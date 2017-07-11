@@ -787,7 +787,7 @@ windows下可以完全搭建Web服务器，但考虑到目前更多的Web等服�
 
 **4.1 进入linux系统**
 
-- 如果已有`linux`远程服务器，则用`putty`或`Xshell`等工具登陆一个具有sudo权限的账号。
+- 如果已有`linux`远程服务器，则用`putty`或`Xshell`等工具登陆一个具有sudo权限的账号，方法可自行百度。
 - 如果没有远程服务器，且本地计算机不是`linux`系统，可安装其任意一个流行的发行版本，这里介绍flask在`ubuntu`下的web服务器安装使用，`ubuntu`请读者自行搜索安装，关键字可为"ubuntu U盘安装"。安装时注意记住用户密码，这个密码也就是日后管理员密码，具有`sudo`权限，你懂的。
 
 **4.2 ubuntu等桌面环境**
@@ -852,14 +852,12 @@ $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 2. $ `source activate env34`  
 激活刚才创建的`env34`环境。此时，会发现提示符行最前面有`(env34)`。如果确定要在`python3.4`版本下进行各类软件包的安装以及使用，则可在该环境下进行。
 
-3. $ `source deactivate env34`
+3. (env34)$ `source deactivate env34`
 退出env34环境（注意，以后利用`source activate env34`即可再次进入该环境，且保留所有安装包等各项设置）
 
+**5.3搭建gunicorn服务并提供服务**
 
-**5.3 安装配置nginx（待续）**
-
-Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。由俄罗斯的程序设计师Igor Sysoev所开发，供俄国大型的入口网站及搜索引擎Rambler（俄文：Рамблер）使用。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。(引自百度百科)
-
+- 搭建
 1. 登陆linux服务器
 
 2. $ `sudo apt-get update`
@@ -871,15 +869,55 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 
 linux环境下编译python扩展应用时一般均需要安装`python-dev`包，主要包含编译时需要的头文件。
 
-4. $ `sudo apt-get install python-pip`
+4. source activate env34
+
+5. (env34)$ `sudo apt-get install python-pip`
 
 安装`python-pip`模块，该模块安装以后，可以使用`pip install 软件包`这样的`pip`命令方便安装python各类软件库/包。
 
-5. $ `sudo pip install nginx`
+6. (env34)$ `pip install gunicorn`
+
+至此，gunicorn安装完毕。
+
+- 提供服务
+
+1. 可在指定目录如在`/var/www/`下，建立`my_app`目录，然后请自行建立类似**3.2**小节中的目录结构、同名文件以及相同的文件内容。
+
+2. 转到my_app目录。
+
+3. (env34)$ `gunicorn -w 4 -b 0.0.0.0:8000 word_freq_vis:app`
+
+启动gunicorn服务，其中：`-w`参数是`worker`数量，为4，`-b`参数是绑定地址及端口，为`0.0.0.0:8000`，最后是程序名称以及函数名称，在本例中分别是`word_freq_div`及`app`。
+
+4. 在服务器浏览器中输入：`127.0.0.1:8000`，观看执行结果。假设服务器ip为`xxx.xxx.xxx.xxx`，则可在任意联网终端浏览器内访问：`xxx.xxx.xxx.xxx:8000`，观察执行结果。
+
+5. 回到命令行，按`Ctrl+c`，停止gunicorn服务。
+
+6. (env34)$ `source deactivate env34`。
+
+退出env34虚拟环境。
+
+至此，基于`gunicorn`的动态可视化web服务已经搭建。
+
+但如果你的网站不仅仅是提供了动态可视化网页，还有一些静态网页如纯`html`页面等，且访问用户较多，则可安装配置`nginx`来进行静态动态网页分别解析代理以提高网站性能。
+
+**5.4 安装配置nginx**
+
+Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器，并在一个BSD-like 协议下发行。由俄罗斯的程序设计师Igor Sysoev所开发，供俄国大型的入口网站及搜索引擎Rambler（俄文：Рамблер）使用。其特点是占有内存少，并发能力强，事实上nginx的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。(引自百度百科)
+
+1. 登陆linux服务器
+
+2. $ `sudo apt-get update`
+
+3. $ `sudo apt-get install python-dev`
+
+4. source activate env34
+
+5. (env34)$ `sudo pip install nginx`
 
 安装nginx包。
 
-6.  $ `sudo service nginx start`
+6. (env34)$ `sudo service nginx start`
 
 启动`nginx`服务。
 
@@ -899,18 +937,6 @@ linux环境下编译python扩展应用时一般均需要安装`python-dev`包，
 10. $ `sudo service nginx restart`
 
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
-
-
-**5.4 搭建gunicorn（待续）**
-1. 登陆linux服务器
-
-2. $ `sudo apt-get update`
-
-3. $ `sudo apt-get install python-dev`
-
-4. $ `pip install gunicorn`
-5. 
-$ `gunicorn -b 127.0.0.1:5000 myapp:app`
 
 
 **5.5 启动服务并展示可视化图表（待续）**
