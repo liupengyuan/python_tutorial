@@ -771,13 +771,13 @@ if __name__ == "__main__":
 恭喜，一个能够与用户进行交互、数据动态加载并进行可视化展示demo已经完成了。
 
 在此基础上，如果想做出更炫酷的可视化展示平台，可以进一步参考学习如下工具或者语言：
-- flask
+
 - html
-- javascript
-- echarts
 - css
-- bootstrap
-- jquery
+- javascript及jquery
+- echarts工具包
+- flask框架
+- bootstrap框架
 
 我们搭建可视化平台后，理想的情况是发现访问用户逐步增加，这时候，仅利用flask自身的web服务可能就满足不了要求了，一般来说，需要一台Web服务器，目前理想的情况，是租用。  
 
@@ -855,7 +855,7 @@ $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 3. (env34)$ `source deactivate env34`
 退出env34环境（注意，以后利用`source activate env34`即可再次进入该环境，且保留所有安装包等各项设置）
 
-**5.3搭建gunicorn服务并提供服务**
+**5.3搭建gunicorn并提供服务**
 
 - 搭建
 1. 登陆linux服务器
@@ -938,19 +938,3 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
 
-
-**5.5 启动服务并展示可视化图表（待续）**
-
-1. 登陆到Linux服务器
-2. $ `sudo service nginx restart`
-如未启动`nginx`则启动`nginx`服务。
-3. $ `cd /var/www`
-转到 `/var/www`目录。
-4. $ `mkdir myapp`
-在当前目录(`/var/www`)下，建立工作目录，名为`myapp`。
-5. $ `cd myapp`
-进入`myapp`工作目录
-6. $ `vim index.html`
-建立并编辑`index.html`文件，将本章的示例代码xx-6复制进去。
-7. 打开浏览器并输入`127.0.0.1`  
-浏览器将会显示预期中的可视化图表。
