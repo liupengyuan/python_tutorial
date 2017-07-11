@@ -870,7 +870,7 @@ $ `wget -c https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh`
 
 linux环境下编译python扩展应用时一般均需要安装`python-dev`包，主要包含编译时需要的头文件。
 
-4. source activate env34
+4. `source activate env34`
 
 5. (env34)$ `sudo apt-get install python-pip`
 
@@ -890,7 +890,7 @@ linux环境下编译python扩展应用时一般均需要安装`python-dev`包，
 
 启动gunicorn服务，其中：`-w`参数是`worker`数量，为4，`-b`参数是绑定地址及端口，为`0.0.0.0:8000`，最后是程序名称以及函数名称，在本例中分别是`word_freq_div`及`app`。
 
-4. 在服务器浏览器中输入：`127.0.0.1:8000`，观看执行结果。假设服务器ip为`xxx.xxx.xxx.xxx`，则可在任意联网终端浏览器内访问：`xxx.xxx.xxx.xxx:8000`，观察执行结果。
+4. 在服务器浏览器中输入：`127.0.0.1:8000`，观看执行结果。假设服务器ip为`xxx.xxx.xxx.xxx`，也可在同局域网内终端的浏览器访问：`xxx.xxx.xxx.xxx:8000`，观察执行结果。
 
 5. 回到命令行，按`Ctrl+c`，停止gunicorn服务。
 
@@ -981,7 +981,9 @@ server{
 
 重启`nginx`服务。如果没有错误提示信息，则表示服务已经成功重启，否则说明上述`default`文件输入有误，需要重新修改并再次重启。
 
-9. 假设远程web服务器ip地址为：`xxx.xxx.xxx.xxx`，在本地浏览器输入`xxx.xxx.xxx.xxx/test_static.html`并回车，因为是静态页面，所以直接被`nginx`解析访问。在本地浏览器输入`xxx.xxx.xxx.xxx`并回车，则动态可视化页面将被加载执行，这是通过nginx代理到gunicorn提供的web服务。
+9. 假设租用的远程web服务器ip地址为：`xxx.xxx.xxx.xxx`：
+- 可在本地浏览器输入`xxx.xxx.xxx.xxx/test_static.html`并回车，因为是静态页面，所以直接被`nginx`解析访问。
+- 在本地浏览器输入`xxx.xxx.xxx.xxx`并回车，则动态可视化页面将被加载执行，这是通过nginx代理到gunicorn提供的web服务。
 
 至此，一个简单的flask+nginx+gunicorn联合进行web服务示例已经完成。
 
