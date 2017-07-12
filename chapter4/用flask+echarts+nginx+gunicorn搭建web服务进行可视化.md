@@ -584,7 +584,7 @@ if __name__ == '__main__':
 		<meta charset="UTF-8">
 	</head>
 	<!--文本框及提交按钮-->
-	<form name="input" action="/result" method="POST">
+	<form name="input" action="http://www.baidu.com" method="POST">
 		Username: <input type="text" name="user"> <input type="submit" value="提交">
 	</form>
 </html>
@@ -593,7 +593,7 @@ if __name__ == '__main__':
 双击该文件，在文本框中输入字符串，点击`提交`按钮，观察结果。
 
 示例代码xx-14中：
-- `<form>`与`</form>`是一对表单标签，其`name`属性的值为`input`，`action`属性的值为`/result`，`method`属性的值为`POST`。这个表单的名字为`input`，表单完成（执行/提交）后要执行的动作是`/result`，这个动作是执行同名路由绑定的函数，表单提交数据的方法是`POST`，表单数据会被发送到到`action`动作中规定的页面（函数）中。
+- `<form>`与`</form>`是一对表单标签，其`name`属性的值为`input`，`action`属性的值为`http://www.baidu.com`，`method`属性的值为`POST`。这个表单的名字为`input`，表单完成（执行/提交）后要执行的动作是`http://www.baidu.com`，这个动作是执行同名路由绑定的函数，表单提交数据的方法是`POST`，表单数据会被发送到到`action`动作中规定的页面（函数）中。对本例，由于向百度首页发送一个字符串并不会直接被其接受，因此百度会给出一个错误页面信息。
 - `<input type="text" name="user">`中，`<input>`标签规定了用户可以在其中输入的字段，字段`type`属性值为`text`（即文本），`name`属性值为`user`，后续可以根据`user`这个值来获取输入的文本。
 - `<input type="submit" value="提交">`中，字段`type`属性值为`submit`（即提交动作），`value`属性值为`提交`，该值将显示在按钮上。
 
