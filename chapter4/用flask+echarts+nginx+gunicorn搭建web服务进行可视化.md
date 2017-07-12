@@ -914,7 +914,7 @@ Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（I
 
 4. $ `source activate env34`
 
-5. (env34)$ `sudo pip install nginx`
+5. (env34)$ `sudo apt-get install nginx`
 
 安装nginx包。
 
