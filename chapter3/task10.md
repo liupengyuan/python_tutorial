@@ -1,8 +1,6 @@
 核心任务：对文本语料库统计，将结果保存为特定文件格式，将程序作为共享软件发布
 
-10.1 任务描述 
-
-文本语料库一般可视为存放在一个目录下的所有文本文件，该目录可能含有不定层次和数量的子目录与文本文件。真实语料库统计需要统计和展示的内容很多，本任务仅考虑对分词后的文本语料库，主要任务如下：
+10.1 任务描述 文本语料库一般可视为存放在一个目录下的所有文本文件，该目录可能含有不定层次和数量的子目录与文本文件。真实语料库统计需要统计和展示的内容很多，本任务仅考虑对分词后的文本语料库，主要任务如下：
 - 统计其总字节数、文本数、词频以及词的2gram频（连续两个词作为一个整体的频次）；
 - 将统计结果保存为.csv格式及xlsx格式以及JSON格式；
 - 将写好的代码作为共享软件发布到python第三方库的源仓库中（pypi），任何人均可以搜到并安装使用。
@@ -202,11 +200,11 @@ def count_words_dir(path):
 
 第二次import my_counter后，程序会直接执行my_counter.py中的main()函数。
 
-这是由于，每一个python程序在运行时，都会自动定义一个变量__name__。如果是直接运行程序，则__name__的值为字符串`'__main__'`，如果是因为import导入而导致程序被运行，则__name__的值为该程序名。
+这是由于，每一个python程序在运行时，都会自动定义一个变量__name__。如果是直接运行程序，则__name__的值为字符串'__main__'，如果是因为import导入而导致程序被运行，则__name__的值为该程序名。
 
 因此，第一次import my_counter，运行my_counter.py时，__name__的值为'my_counter'，所以main()不会被执行（这也是我们一般希望的结果）。
 
-而第二次import my_counter，运行改过的my_counter.py时，由于去掉了`if __name__ == '__main__'`这个判断，因此main()函数会被执行。
+而第二次import my_counter，运行改过的my_counter.py时，由于去掉了if __name__ == '__main__'这个判断，因此main()函数会被执行。
 
 统计temp目录下所有文本文件（含子目录）的词频可通过导入my_counter模块如下：
 
@@ -262,13 +260,41 @@ if __name__ == '__main__':
 
 可以用excel打开位于d:\code_temp下的result.csv文件，也可以直接用记事本等文本编辑器打开。
 
+对于csv格式文件，python内置了专门用来处理csv格式文件的模块：csv。更多时候，由于csv格式文件的分隔符不一定是逗号，允许转义字符，允许逗号成为值的一部分，因而用split()方法不易处理，而csv模块可以直接解析，因此其用于文件读入比较方便：
+
+```python
+# coding:utf-8
+# 示例代码 C3-8
+
+import csv
+
+with open(r'd:\code_temp\result.csv') as f:
+    reader = csv.reader(f)
+    for line in reader:
+        print(line)
+        print(line)
+        print('-'*30)
+        break
+    
+    data = list(reader)
+    print(data[1][1])
+```
+
+示例代码C3-8中：
+- import csv，引入csv包
+- reader = csv.reader(f)，建立一个reader对象，可以解析读取f中的行
+- for line in reader，可以按行遍历解析的行
+- data = list(reader)，可以直接将文件转为list
+- print(data[1][1])，可以按照行与列索引获得对应数据
+
+
 xlsx是当前excel最常用的文件格式，对此类文件操作一般可用第三方包：openpyxl。该包已随Anaconda一并安装。
 
 键入如下代码并运行。
 
 ```python
 # coding:utf-8
-# 示例代码 C3-8
+# 示例代码 C3-9
 
 '''
 此部分与示例代码 C3-6部分相同
@@ -289,7 +315,7 @@ if __name__ == '__main__':
         
 ```
 
-示例代码C3-8中：
+示例代码C3-9中：
 - import openpyxl引入openpyxl包
 - wb = openpyxl.Workbook()，调用Workbook()函数，建立一个工作簿
 - ws = wb.active，选择当前活动的表，用ws指向之。
@@ -306,7 +332,7 @@ if __name__ == '__main__':
 
 
 
-扩展与总结：
+10.x 扩展与总结：
 
 os模块
 import方式与原则
