@@ -202,11 +202,11 @@ def count_words_dir(path):
 
 第二次import my_counter后，程序会直接执行my_counter.py中的main()函数。
 
-这是由于，每一个python程序在运行时，都会自动定义一个变量__name__。如果是直接运行程序，则__name__的值为字符串'__main__'，如果是因为import导入而导致程序被运行，则__name__的值为该程序名。
+这是由于，每一个python程序在运行时，都会自动定义一个变量__name__。如果是直接运行程序，则__name__的值为字符串`'__main__'`，如果是因为import导入而导致程序被运行，则__name__的值为该程序名。
 
 因此，第一次import my_counter，运行my_counter.py时，__name__的值为'my_counter'，所以main()不会被执行（这也是我们一般希望的结果）。
 
-而第二次import my_counter，运行改过的my_counter.py时，由于去掉了if __name__ == '__main__'这个判断，因此main()函数会被执行。
+而第二次import my_counter，运行改过的my_counter.py时，由于去掉了`if __name__ == '__main__'`这个判断，因此main()函数会被执行。
 
 统计temp目录下所有文本文件（含子目录）的词频可通过导入my_counter模块如下：
 
