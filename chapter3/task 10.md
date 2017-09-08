@@ -235,6 +235,69 @@ if __name__ == '__main__':
 示例代码C3-6中:
 - my_counter.count_words_freq_dict(file)是调用自定义包my_counter中的count_word_freq_dict函数，与以往导入模块并使用其中函数的方法没有不同。
 
+10.4 输出结果为csv格式、xlsx格式及JOSN文件格式
+
+CSV是Comma-Separated Values的缩写，其文件以纯文本形式存储的数据，数据间默认为逗号分隔，但也可以用其他符号。存成csv文件格式与存为文本文件类似，只需要构造用逗号或其他符号分隔的形式，再以一般文本形式文件存储即可。
+
+键入如下代码并运行。
+
+```python
+# coding:utf-8
+# 示例代码 C3-7
+
+'''
+此部分与示例代码 C3-6部分相同
+后续代码从测试部分开始有所不同
+'''
+
+if __name__ == '__main__':
+    path = r'd:\temp'
+    result = count_words_dir(path)
+    with open(r'd:\code_temp\result.csv', 'w') as f:
+        for word, freq in result.items():
+            f.writeline(','.join(word, freq))        
+```
+
+可以用excel打开位于d:\code_temp下的result.csv文件，也可以直接用记事本等文本编辑器打开。
+
+xlsx是当前excel最常用的文件格式，对此类文件操作一般可用第三方包：openpyxl。该包已随Anaconda一并安装。
+
+键入如下代码并运行。
+
+```python
+# coding:utf-8
+# 示例代码 C3-8
+
+'''
+此部分与示例代码 C3-6部分相同
+后续代码从测试部分开始有所不同
+'''
+
+import openpyxl
+
+if __name__ == '__main__':
+    path = r'd:\temp'
+    result = count_words_dir(path)
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    for index, element in enumerate(list(result)):
+        ws.cell(row=index, column=1).value = element[0]
+        ws.cell(row=index, column=2).value = element[1]
+    wb.save(filename=r'd:\code_temp\result.xlsx')
+        
+```
+
+示例代码C3-8中：
+- import openpyxl引入openpyxl包
+- wb = openpyxl.Workbook()，调用Workbook()函数，建立一个工作簿
+- ws = wb.active，选择当前活动的表，用ws指向之。
+- ws.cell(row=index, column=1).value = element[0]，首先调用工作表ws的cell()方法，该方法接受两个参数row及column，可得到工作表中相应坐标的格。然后将该格的值value设为element[0]。
+- wb.save(filename='d:\code_temp\result.xlsx)，调用wb对象的save方法，将wb这个工作簿存入filename指定的文件。
+
+可以到d:\code_temp中打开result.xlsx文件查看。
+
+
+
 
 
 
