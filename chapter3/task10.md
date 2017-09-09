@@ -443,7 +443,154 @@ if __name__ == '__main__':
 有关json在python中的更多细节，请参考官方文档：https://docs.python.org/3/library/json.html
 
 
-**10.x 扩展与总结**
+**10.5 统计词的2gram频次**
+
+统计词的2gram的频次，思路与统计词频类似。首先初始化一个空的字典，假设列表中存放分词的文本，我们需要从列表索引的第0位置开始，每次取出2个词(假设文本至少含有2个词汇)，依次放入字典并计数。
+
+由于不能直接利用Counter进行计数，因此可仿照task9中示例程序9-25，键入以下代码并运行：
+
+```python
+
+#coding: utf-8
+#示例程序 C3-14
+
+from collections import defaultdict
+
+def count_gram_freq_dict(filename):
+    gram_freq_dict = defaultdict(int)
+    
+    with open(filename) as f:
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            for i in range(len(words)-1):
+                gram_freq_dict['_'.join(words[i], words[i+1])] += 1
+    return gram_freq_dict
+
+```
+
+示例程序C3-14中：
+- words = [word.split('/')[0] for word in line.split()]，将文本中带词性的词存入words列表中
+- gram_freq_dict['_'.join(words[i], words[i+1])] += 1，将words中连续两个词用_连接，并统计频次
+
+还可以将示例程序C3-14稍加扩展，扩展为可统计词的任意gram频次的函数：
+
+```python
+#coding: utf-8
+#示例程序 C3-15
+
+from collections import defaultdict
+
+def count_gram_freq_dict(filename, n=2):
+    gram_freq_dict = defaultdict(int)
+    
+    with open(filename) as f:
+        for line in f:
+            words = [word.split('/')[0] for word in line.split()]
+            if len(words) >= n:
+                for i in range(len(words)-n+1):
+                    gram_freq_dict['_'.join(words[i:i+n-1])] += 1
+    return gram_freq_dict
+
+```
+
+示例程序C3-15中：
+- def count_gram_freq_dict(filename, n=2)，定义了一个函数，该函数有两个参数，其中参数n是**默认参数**，可为参数提供默认值，调用函数时可传可不传该默认参数的值。因此，如果在调用该函数时，如果只有第一个filename参数，则默认函数参数n的值为2。
+
+
+**10.6 包/模块的发布**
+
+我们对语料库统计的代码十分满意，想将统计语料库的代码发布，以第三方包的形式共享给大家。届时，人们可以利用pip install安装这个语料库统计的包，并调用函数。这个过程一般称为项目打包与发布（Packaging and Distributing Projects），这个过程可以简单的分为三步。
+
+a. 项目配置(Configuring your Project)
+
+简单的说，就是整理好项目的目录，建立一些必要的安装配置及初始化文件。
+- 打开一个powershell
+- 键入d:并回车
+- 键入md stat_test并回车，建立stat_test目录
+- 键入cd stat_test并回车，进入该目录
+- 建立stat_test.py文件并保存，内容是本小节完整代码
+- 建立README.rst文件，该文件是项目的详细说明文档，文本格式，可参考官方示例文档https://github.com/pypa/sampleproject/blob/master/README.rst修改，存在stat_test目录下
+- 建立setup.py文件，该文件基于官方示例文档https://github.com/pypa/sampleproject/blob/master/setup.py，内容大致如下：
+
+```python
+#coding: utf-8
+#示例程序 C3-16
+
+from setuptools import setup, find_packages
+from codecs import open
+from os import path
+
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
+setup(
+    name='stat_test',
+    version='0.1',
+    description='stat_test',
+    long_description=long_description,
+    # The project's main homepage.
+    url='https://github.com/liupengyuan/hello-world',
+    # Author details
+    author='liupengyuan',
+    author_email='liupengyuan@pku.edu.cn',
+    # Choose your license
+    license='MIT',
+    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[       
+        'Development Status :: 3 - Alpha',
+
+        # Indicate who your project is intended for
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Build Tools',
+
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: MIT License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.      
+        'Programming Language :: Python :: 3.6',
+    ],
+    # What does your project relate to?
+    keywords='sample test for dist',
+    # py_modules=["my_module"],    
+)
+
+```
+
+示例程序C3-16中：
+- name='stat_test'，指定项目名称
+- url='https://github.com/liupengyuan/stat_test'，一般使url指向该项目在github上的项目地址，将stat_test中的所有文件上传到该项目目录下
+- author='liupengyuan'，指明项目作者
+- author_email='liupengyuan@pku.edu.cn'，指定项目作者邮件
+
+除了以上修改外，对官方文档示例的setup.py暂先可以不做修改，直接复制即可。
+
+
+b. 项目打包(Packaging your Project)
+
+- 在d:\stat_test目录下，键入python setup.py sdist并回车，就创建了一个源代码发布包(source distribution)
+最好同时建立一个Wheels包，其他用户安装时无需build这一过程，速度会更快。
+- pip install wheel，安装wheel模块
+- python setup.py bdist_wheel
+
+c. 上传项目到PyPi(Uploading your Project to PyPi)
+
+The Python Package Index(PypI) is a repository of software for the Python programming language. There are currently 116533 packages here.
+
+- 到https://pypi.python.org/pypi注册用户，注意用户名与邮箱要与setup.py中的对应
+- pip install twine，安装twine包，用于将项目上传到pypi上
+- twine upload dist/*，将项目上传到pypi
+
+访问https://pypi.python.org/pypi，用刚才注册过的账号密码登陆，可以发现新增了一个发布的项目test_test。
+
+OK，现在世界任何python用户均可以利用pip install stat_test安装我们发布的包，并利用里面的函数进行语料库统计。
+
+
+
+有关项目打包与发布，详细信息见官方文档：https://packaging.python.org/tutorials/distributing-packages/#uploading-your-project-to-pypi。
+
+
+**10.7 扩展与总结**
 
 os模块
 import 模块路径
