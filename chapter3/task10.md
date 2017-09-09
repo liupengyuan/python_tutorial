@@ -237,6 +237,8 @@ if __name__ == '__main__':
 
 10.4 输出结果为csv格式、xlsx格式及JOSN文件格式
 
+10.4.1 输出结果到csv格式文件
+
 CSV是Comma-Separated Values的缩写，其文件以纯文本形式存储的数据，数据间默认为逗号分隔，但也可以用其他符号。存成csv文件格式与存为文本文件类似，只需要构造用逗号或其他符号分隔的形式，再以一般文本形式文件存储即可。
 
 键入如下代码并运行。
@@ -287,6 +289,7 @@ with open(r'd:\code_temp\result.csv') as f:
 - data = list(reader)，可以直接将文件转为list
 - print(data[1][1])，可以按照行与列索引获得对应数据
 
+10.4.2 输出结果到xlsx格式文件
 
 xlsx是当前excel最常用的文件格式，对此类文件操作一般可用第三方包：openpyxl。该包已随Anaconda一并安装。
 
@@ -324,12 +327,100 @@ if __name__ == '__main__':
 
 可以到d:\code_temp中打开result.xlsx文件查看。
 
+10.4.3 输出结果到JSON格式文件
+
+JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，JSON采用完全独立于语言的文本格式（就是一个字符串），几乎所有编程语言都有解析JSON的库，几乎已经成为互联网时代数据交换的标准格式。
+
+JSON建构于两种结构：
+- “名称/值”对的集合（A collection of name/value pairs），在python中可以理解为dict类型。
+- “值的有序列表”（An ordered list of values），在python中可以理解为列表（list）。
+
+具体JSON的介绍可参考官网：http://www.json.org/
+
+python将JSON模块置于标准库中，用于处理JSON数据与python中数据或变量之间的转换。一般的，JSON可以用来存储python中的字符串、整型、浮点型、布尔型、列表、字典及NoneType等类型。
+
+键入以下代码，并观察执行结果。
+
+```python
+# coding:utf-8
+# 示例代码 C3-10
+
+import json
+
+s = json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
+print(type(s))
+print(s)
+print('-'*30)
+print(json.dumps({'c': 0, 'b': 0, 'a': 0}, sort_keys=True))
+print('-'*30)
+print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
+
+```
+
+示例代码C3-10中：
+- 首先导入json模块
+- json.dumps()函数用于将Python变量（对象）**编码**成JSON字符串，这一过程也称为**序列化**，dumps就是dump string
+- sort_keys是json.dumps()函数的一个参数，可以用来对字典进行排序
+- indent是json.dumps()函数的一个参数，用于控制每行行首缩进，提升json的可读性
+- 注意：输出的字符串中，所有的单引号'都自动变成了双引号"，json格式对字符串是采用双引号进行包裹的
 
 
+再看下编码/序列化的反向操作，即**解码**，将json字符串解析成python对象的过程。
+
+键入以下代码，并观察执行结果。
+
+```python
+# coding:utf-8
+# 示例代码 C3-11
+
+import json
+
+foos = json.loads('["foo", {"bar":["baz", null, 1.0, 2]}]')
+print(type(foos))
+print(foos)
+print('-'*30)
+foos = print(json.loads('{"a": 0, "b": 0, "c": 0}'))
+print(type(foos))
+print(foos)
+
+```
+
+示例代码C3-11中：
+- json.loads()函数用于将JSON字符串解码成Python变量（对象），这一过程也可称为**反序列化**，loads即load string
 
 
+回到我们的任务中，键入以下代码并运行：
 
 
+```python
+# coding:utf-8
+# 示例代码 C3-12
+
+'''
+此部分与示例代码 C3-6部分相同
+后续代码从测试部分开始有所不同
+'''
+
+import json
+
+if __name__ == '__main__':
+    path = r'd:\temp'
+    result = count_words_dir(path)
+    with open(r'd:\code_temp\result.json', 'w') as f:
+        json.dump(result, f)
+        
+    with open(r'd:\code_temp\result.json') as f:
+        new_result = json.load(f)
+    
+    type(new_result)
+
+```
+
+示例代码C3-12中：
+- json.dump(obj, fp)函数可以将python变量（对象）序列化并保存到文件中，obj参数是指向要序列化的对象，fp指向要存入的文件。
+- json.load(fp)函数将json文件对象解析成python变量（对象）。
+
+有关json在python中的更多细节，请参考官方文档：https://docs.python.org/3/library/json.html
 
 
 10.x 扩展与总结：
