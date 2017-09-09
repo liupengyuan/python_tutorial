@@ -1,13 +1,13 @@
-核心任务：对文本语料库统计，将结果保存为特定文件格式，将程序作为共享软件发布
+**核心任务：对文本语料库统计，将结果保存为特定文件格式，将程序作为共享软件发布**
 
-10.1 任务描述 
+**10.1 任务描述**
 
 文本语料库一般可视为存放在一个目录下的所有文本文件，该目录可能含有不定层次和数量的子目录与文本文件。真实语料库统计需要统计和展示的内容很多，本任务仅考虑对分词后的文本语料库，主要任务如下：
 - 统计其总字节数、文本数、词频以及词的2gram频（连续两个词作为一个整体的频次）；
 - 将统计结果保存为.csv格式及xlsx格式以及JSON格式；
 - 将写好的代码作为共享软件发布到python第三方库的源仓库中（pypi），任何人均可以搜到并安装使用。
 
-10.2 得到目录下所有文件及文件大小（os模块使用初步）
+**10.2 得到目录下所有文件及文件大小（os模块使用初步）**
 
 在XXXX下载文件YYY，在d:\下，新建子目录temp，将YYY内所有文件解压至temp目录中。打开temp目录，可以看到其中有很多文本文件，有很多文件夹。假设我们当前的任务是统计temp当前目录下的所有文本文件（不含子目录）。
 
@@ -163,7 +163,7 @@ def count_words_dir(path):
 
 确实可以将task9中示例程序9-36中的函数count_words_freq_dict(file)直接copy过来，但我们更希望能不复制代码，直接调用该函数---人类讨厌重复。
 
-10.3 模块导入与使用
+**10.3 模块导入与使用**
 
 在以往的示例程序中，很多都进行了模块导入（import），如内置的标准库中的math，Collection的Counter及os等，非标注库（也称第三方库）bokeh等。这些模块是什么样子？放在哪里了呢？
 
@@ -212,7 +212,7 @@ def count_words_dir(path):
 
 ```python
 # coding:utf-8
-# 示例代码 C3-6
+# 示例代码 C3-7
 # 统计一个目录下所有文件的词频（含子目录）
 
 import os
@@ -234,12 +234,28 @@ if __name__ == '__main__':
 
 ```
 
-示例代码C3-6中:
+示例代码C3-7中:
 - my_counter.count_words_freq_dict(file)是调用自定义包my_counter中的count_word_freq_dict函数，与以往导入模块并使用其中函数的方法没有不同。
+- 注意，my_counter.py应与本示例代码在同一个目录下，否则import时会找不到该文件。
 
-10.4 输出结果为csv格式、xlsx格式及JOSN文件格式
+python解释器需要知道被import模块的所在位置，这就提供了两种方式确保python解释器能够找到我们自定义的模块：
+- 将模块放到python解释器默认的搜索位置
+- 告诉python解释器去哪里找（通过更改环境变量内容实现，方法可自行搜索）
 
-10.4.1 输出结果到csv格式文件
+python解释器默认的搜索位置顺序是：1、当前目录；2、path环境变量目录。其中，path环境变量目录的列表可用如下代码列出：
+`import sys, pprint`
+`pprint.pprint(sys.path)`
+
+- 首先导入sys及pprint模块。
+- sys.path可以得到当前环境的目录列表。
+- 使用pprint是为了保证输出的易读性，利用pprint下的pprint()方法打印出当前环境的路径目录列表（sys.path），该方法类似print()函数。
+
+因此，将我们自定义的模块/程序放置到当前目录或者上述代码列出的任意一个目录中，均能够被导入。
+
+
+**10.4 输出结果为csv格式、xlsx格式及JOSN文件格式**
+
+**10.4.1 输出结果到csv格式文件**
 
 CSV是Comma-Separated Values的缩写，其文件以纯文本形式存储的数据，数据间默认为逗号分隔，但也可以用其他符号。存成csv文件格式与存为文本文件类似，只需要构造用逗号或其他符号分隔的形式，再以一般文本形式文件存储即可。
 
@@ -247,10 +263,10 @@ CSV是Comma-Separated Values的缩写，其文件以纯文本形式存储的数�
 
 ```python
 # coding:utf-8
-# 示例代码 C3-7
+# 示例代码 C3-8
 
 '''
-此部分与示例代码 C3-6部分相同
+此部分与示例代码 C3-7部分相同
 后续代码从测试部分开始有所不同
 '''
 
@@ -268,7 +284,7 @@ if __name__ == '__main__':
 
 ```python
 # coding:utf-8
-# 示例代码 C3-8
+# 示例代码 C3-9
 
 import csv
 
@@ -284,14 +300,14 @@ with open(r'd:\code_temp\result.csv') as f:
     print(data[1][1])
 ```
 
-示例代码C3-8中：
+示例代码C3-9中：
 - import csv，引入csv包
 - reader = csv.reader(f)，建立一个reader对象，可以解析读取f中的行
 - for line in reader，可以按行遍历解析的行
 - data = list(reader)，可以直接将文件转为list
 - print(data[1][1])，可以按照行与列索引获得对应数据
 
-10.4.2 输出结果到xlsx格式文件
+**10.4.2 输出结果到xlsx格式文件**
 
 xlsx是当前excel最常用的文件格式，对此类文件操作一般可用第三方包：openpyxl。该包已随Anaconda一并安装。
 
@@ -299,10 +315,10 @@ xlsx是当前excel最常用的文件格式，对此类文件操作一般可用�
 
 ```python
 # coding:utf-8
-# 示例代码 C3-9
+# 示例代码 C3-10
 
 '''
-此部分与示例代码 C3-6部分相同
+此部分与示例代码 C3-7部分相同
 后续代码从测试部分开始有所不同
 '''
 
@@ -320,7 +336,7 @@ if __name__ == '__main__':
         
 ```
 
-示例代码C3-9中：
+示例代码C3-10中：
 - import openpyxl引入openpyxl包
 - wb = openpyxl.Workbook()，调用Workbook()函数，建立一个工作簿
 - ws = wb.active，选择当前活动的表，用ws指向之。
@@ -329,7 +345,7 @@ if __name__ == '__main__':
 
 可以到d:\code_temp中打开result.xlsx文件查看。
 
-10.4.3 输出结果到JSON格式文件
+**10.4.3 输出结果到JSON格式文件**
 
 JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，JSON采用完全独立于语言的文本格式（就是一个字符串），几乎所有编程语言都有解析JSON的库，几乎已经成为互联网时代数据交换的标准格式。
 
@@ -345,7 +361,7 @@ python将JSON模块置于标准库中，用于处理JSON数据与python中数据
 
 ```python
 # coding:utf-8
-# 示例代码 C3-10
+# 示例代码 C3-11
 
 import json
 
@@ -359,7 +375,7 @@ print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
 
 ```
 
-示例代码C3-10中：
+示例代码C3-11中：
 - 首先导入json模块
 - json.dumps()函数用于将Python变量（对象）**编码**成JSON字符串，这一过程也称为**序列化**，dumps就是dump string
 - sort_keys是json.dumps()函数的一个参数，可以用来对字典进行排序
@@ -373,7 +389,7 @@ print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
 
 ```python
 # coding:utf-8
-# 示例代码 C3-11
+# 示例代码 C3-12
 
 import json
 
@@ -387,7 +403,7 @@ print(foos)
 
 ```
 
-示例代码C3-11中：
+示例代码C3-12中：
 - json.loads()函数用于将JSON字符串解码成Python变量（对象），这一过程也可称为**反序列化**，loads即load string
 
 
@@ -396,7 +412,7 @@ print(foos)
 
 ```python
 # coding:utf-8
-# 示例代码 C3-12
+# 示例代码 C3-13
 
 '''
 此部分与示例代码 C3-6部分相同
@@ -418,14 +434,15 @@ if __name__ == '__main__':
 
 ```
 
-示例代码C3-12中：
+示例代码C3-13中：
 - json.dump(obj, fp)函数可以将python变量（对象）序列化并保存到文件中，obj参数是指向要序列化的对象，fp指向要存入的文件。
 - json.load(fp)函数将json文件对象解析成python变量（对象）。
 
 有关json在python中的更多细节，请参考官方文档：https://docs.python.org/3/library/json.html
 
 
-10.x 扩展与总结：
+**10.x 扩展与总结**
 
 os模块
+import 模块路径
 import方式与原则
