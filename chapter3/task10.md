@@ -20,6 +20,7 @@
 
 import os
 
+path = r'd:\temp'
 files = os.listdir(path)
 for file in files:
     print(file)
