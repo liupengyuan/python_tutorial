@@ -23,12 +23,12 @@
 # Grading standards
 - ## Homework(Weekly)                                                   20%
 - ## Tutorial of tools or intorduction data and related paper(Monthly)  10%(for computer students)
-- ## introduction of corpus and related paper(Monthly)                  10%(for other students)
+- ## Introduction of corpus and related paper(Monthly)  10%(for other students)
 - ## Team project(visualization platform + E/C document + E/C paper)    70%(3 students/team)
 
 # About the project
 - ## Title: Designed by yourself.
-- ## Advice: 1. According to your interest. 2. Choosing a Topic from corpus linguistics. 3. Discuss with your classmate.
+- ## Advice: 1. According to your interest. 2. Choosing a Topic from other lesson. 3. Discuss with your classmate. 4. From me.
 - ## data
   - ## Available Data(I'll talk it later): 
     - ## 1. DCC
@@ -39,7 +39,6 @@
     - ## 3. parallel sentences in dict.youdao.com and cn.bing.com/dict/
   - ## Other any data
 - ## Presentation and submission
-  - ## presentation 15mins /team in the class.
-  - ## submission deadline: 2018.01.24  24:00
-
- 
+ - ## Introduction and Q/A 15-20 mins /team
+ - ## presentation 30 mins /team
+ - ## Submission deadline: 2018.01.24  24:00
