@@ -1,10 +1,10 @@
 # python 入门
-- # python介绍：
-  - https://en.wikipedia.org/wiki/Python_%28programming_language%29
-  - # python能做什么？
-  - https://po.baidu.com/feed/share?context=%7B%22nid%22%3A%22news_9668587491925617804%22%7D
-  - # https://www.python.org/
-- 主讲：刘鹏远 https://github.com/liupengyuan/
+- # python介绍：  
+  - https://en.wikipedia.org/wiki/Python_%28programming_language%29  
+  - # python能做什么？ 
+  - https://po.baidu.com/feed/share?context=%7B%22nid%22%3A%22news_9668587491925617804%22%7D  
+  - # https://www.python.org/  
+- 主讲：刘鹏远 https://github.com/liupengyuan/  
 - 助教：朱述承(硕士生)  负责作业、答疑、习题课等
 - 考核：30%平时+70%期末机考（暂定）
 - 预计课程内容（动态调整）：
