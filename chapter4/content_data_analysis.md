@@ -16,7 +16,7 @@
 ---
 # course material
 - ## This python_tutorial(https://github.com/liupengyuan)
-- ## Python for Data Analysis(by Wes McKinney)
+- ## Pandas for Data Analysis(by Wes McKinney)
 - ## 统计学(by William Mendenhall)
 - ## 爱上统计学(Statistics for people who hate statistics, by Neil J. Salkind)
 - ## 可汗学院公开课：统计学
