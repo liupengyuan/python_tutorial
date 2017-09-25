@@ -6,7 +6,7 @@
 ---
 # content
 - ## Python fundamental
-- ## Statistic fundamental
+- ## Statistics fundamental
 - ## Pandas basic
 - ## Matplotlib basic
 - ## Seaborn basic
