@@ -1,6 +1,6 @@
 # Title: statistical data analysis and visualization with python
 - ## Teacher: 刘鹏远/Liu Pengyuan
-- ## Wechat: 13911510796
+- ## Wechat: ![wechat_me](https://github.com/liupengyuan/python_tutorial/blob/master/pic/wechat_liupengyuan.jpg)
 - ## Office: 主南310
 - ## Assistant: 竺成浩/Zhu Chenghao(Only for undergraduate)
 ---
@@ -17,7 +17,9 @@
 # course material
 - ## This python_tutorial(https://github.com/liupengyuan)
 - ## Python for Data Analysis(by Wes McKinney)
-- ## 统计学(by William Mendenhall)，可汗学院公开课：统计学
+- ## 统计学(by William Mendenhall)
+- ## 爱上统计学(Statistics for people who hate statistics, by Neil J. Salkind)
+- ## 可汗学院公开课：统计学
 - ## 各类官方文档
 ---
 # Grading standards
