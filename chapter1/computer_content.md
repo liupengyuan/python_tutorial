@@ -1,26 +1,27 @@
 # python 入门
-
-- 主讲：刘鹏远 https://github.com/liupengyuan/
-- 助教：邓宇宁  负责作业、答疑、习题课（1），flask初步（1）
-- 义工：竺成浩  负责数据分析pandas(1)
-- 义工：李坦    负责游戏（1）+超实用函数（1）
+- # python介绍：  
+  - https://en.wikipedia.org/wiki/Python_%28programming_language%29  
+  - # python能做什么？ 
+  - https://po.baidu.com/feed/share?context=%7B%22nid%22%3A%22news_9668587491925617804%22%7D  
+  - # https://www.python.org/  
+- 主讲：刘鹏远 https://github.com/liupengyuan/  
+- 助教：朱述承(硕士生)  负责作业、答疑、习题课等
 - 考核：30%平时+70%期末机考（暂定）
 - 预计课程内容（动态调整）：
   - python 基础语法
-  - python函数式编程初步
-  - python面向对象初步
-  - 语料库统计
+  - python 面向对象初步
+  - python 标准库介绍
+  - 语料库统计
   - 正则表达式初步
-  - 翻译API调用及批量翻译文档
   - 数据分析pandas初步
   - 爬虫初步
+  - Linux下使用vim进行python编程初步
   - flask初步
-  - 游戏demo
-- 教材：正在编写，争取每节课后放出
+  - 可视化初步
+- 教材：即本教程，暂时还没有全部写完。
 
 ----
 # outline
-- python介绍
 - python安装
 - jupyter notebook安装
 - anaconda安装（如时间不够，可课后自行安装）
