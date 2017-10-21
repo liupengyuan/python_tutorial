@@ -514,7 +514,7 @@ def count_gram_freq_dict(filename, n=2):
             words = [word.split('/')[0] for word in line.split()]
             if len(words) >= n:
                 for i in range(len(words)-n+1):
-                    gram_freq_dict['_'.join(words[i:i+n-1])] += 1
+                    gram_freq_dict['_'.join(words[i:i+n])] += 1
     return gram_freq_dict
 
 ```
