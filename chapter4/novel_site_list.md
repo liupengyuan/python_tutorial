@@ -1,0 +1,6 @@
+- 百度网盘、微盘等各类资源
+- `http://www.bookdown.com.cn/mingzhu/`
+- `http://www.sogoutxt.com/wenxue/`
+- `http://www.xbwx.com/a/wxlw/`
+- `http://www.jjxsw.cc/category/wenxuejingdian.html`
+- 待补充
