@@ -256,6 +256,30 @@ python解释器默认的搜索位置顺序是：1、当前目录；2、path环�
 
 因此，将我们自定义的模块/程序放置到当前目录或者上述代码列出的任意一个目录中，均能够被导入。
 
+注意，由于对Counter对象的加法计算耗时较多，因此，可以考虑在示例代码3-7中直接原task9中示例程序9-36中的关键语句。
+
+```python
+#coding: utf-8
+示例代码3-8
+import os
+from Collections import Counter
+
+def count_words_dir(path):
+    words_freq_dict = Counter()
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            file = os.path.join(root, file)
+            for line in file:
+                words_freq_dict.update([word.split('/')[0] for word in line.split()])
+    return words_freq_dict
+
+# 测试
+if __name__ == '__main__':
+    path = r'd:\temp'
+    print(list(count_words_dir(path))[:20])
+```
+
+当文件较多时，示例代码3-8的性能，将比示例代码3-7，有几倍的提升。
 
 **10.4 输出结果为csv格式、xlsx格式及JOSN文件格式**
 
@@ -490,7 +514,7 @@ def count_gram_freq_dict(filename, n=2):
             words = [word.split('/')[0] for word in line.split()]
             if len(words) >= n:
                 for i in range(len(words)-n+1):
-                    gram_freq_dict['_'.join(words[i:i+n-1])] += 1
+                    gram_freq_dict['_'.join(words[i:i+n])] += 1
     return gram_freq_dict
 
 ```
