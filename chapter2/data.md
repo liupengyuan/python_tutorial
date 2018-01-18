@@ -1,0 +1,2 @@
+- 成语文件样例：http://yunpan.blcu.edu.cn:80/link/6B7552638AC2A20C69B3FC332A9603EA
+- 语料库文件样例：http://yunpan.blcu.edu.cn/#/link/FC61CB2B791A1999439CEC52C1A30CE2
