@@ -140,7 +140,7 @@ windows下，在`D:`下建立目录`my_app`，其他环境请类似相应建立�
 				name: 'area',
 				type: 'bar',
 				data: []
-			}]
+			}],
 			title: {
 				text: 'example'
 			},
